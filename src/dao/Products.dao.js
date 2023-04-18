@@ -3,9 +3,10 @@ const Products = require('./models/Products.model')
 class ProductsDao {
     constructor() { }
 
-    async findAll() {
+    async findAll(options) {
+        const { limit = 2, page = 2, sort = "asc", query} = options
         try {
-            return await Products.find()
+            return await Products.paginate(query, {limit, page, sort})
         } catch (error) {
             return error
         }
@@ -39,13 +40,13 @@ class ProductsDao {
         return await Products.deleteMany()
     }
 
-    async paginate(query, options){
-        try {
-            return await Products.paginate({query},{options})
-        } catch (error) {
-            return error
-        }
-    }
+    // async paginate(query, options){
+    //     try {
+    //         return await Products.paginate({query},{options})
+    //     } catch (error) {
+    //         return error
+    //     }
+    // }
 
 }
 

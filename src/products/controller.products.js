@@ -1,17 +1,17 @@
 const { Router } = require('express')
 const uploader = require('../utils/multer.utils')
 const ProductsManager = require('../dao/ProductsManager.dao')
-const ProductsDao = require('../dao/Products.dao')
-// const Products = require('../dao/models/Products.model')
+const ProductsDaoFile = require('../dao/Products.dao')
+const Products = require('../dao/models/Products.model')
 
 const router = Router()
 const productManager = new ProductsManager()
-const Products = new ProductsDao()
+const ProductsDao = new ProductsDaoFile()
 
 router.get('/loadItems', async (req, res) => {
     try {
         const products = await productManager.loadItems()
-        const newProducts = await Products.createMany(products)
+        const newProducts = await ProductsDao.createMany(products)
 
         res.json({ message: newProducts })
     } catch (error) {
@@ -21,23 +21,13 @@ router.get('/loadItems', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    const options = {
-        limit : req.query.limit || 10,
-        page : req.query.page || 1,
-        sort : req.query.sort || 1,
-    }
-    const query = {query : req.query.query || {}}
+    const { limit, page, sort, query } = req.query
     try {
-        const products = await Products.paginate(query, options)
-        console.log(limit);
-        console.log(page);
-        console.log(sort);
-        console.log(query);
-
+        const products = await ProductsDao.findAll(query, { limit, page, sort })
         console.log(products);
         res.json({ products: products })
     } catch (error) {
-        res.status(400).json({error: error.message })
+        res.status(400).json({ status: 'error', error })
     }
 })
 
@@ -51,7 +41,7 @@ router.post('/', uploader.single('image'), async (req, res) => {
             price,
             image: req.file.filename
         }
-        const newProduct = await Products.create(newProductInfo)
+        const newProduct = await ProductsDao.create(newProductInfo)
         res.json({ message: newProduct })
     } catch (error) {
         if (error.code === 11000) {
@@ -64,7 +54,7 @@ router.post('/', uploader.single('image'), async (req, res) => {
 })
 
 router.delete('/deleteAll', async (req, res) => {
-    await Products.deleteAll()
+    await ProductsDao.deleteAll()
     res.json({ message: 'deleted all' })
 })
 
