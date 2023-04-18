@@ -4,7 +4,7 @@ class ProductsDao {
     constructor() { }
 
     async findAll(options) {
-        const { limit = 2, page = 2, sort = "asc", query} = options
+        const { limit = 20, page, sort = "asc", query} = options
         try {
             return await Products.paginate(query, {limit, page, sort})
         } catch (error) {

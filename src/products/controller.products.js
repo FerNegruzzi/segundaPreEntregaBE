@@ -23,7 +23,8 @@ router.get('/loadItems', async (req, res) => {
 router.get('/', async (req, res) => {
     const { limit, page, sort, query } = req.query
     try {
-        const products = await ProductsDao.findAll(query, { limit, page, sort })
+        const products = await ProductsDao.findAll({ query, limit, page, sort })
+        console.log( typeof req.query.query)
         console.log(products);
         res.json({ products: products })
     } catch (error) {
