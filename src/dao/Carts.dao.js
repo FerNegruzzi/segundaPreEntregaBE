@@ -2,9 +2,9 @@ const Carts = require("./models/Carts.model");
 const Products = require("./models/Products.model");
 
 class CartsDao {
-    constructor(){}
+    constructor() { }
 
-    async findAll(){
+    async findAll() {
         try {
             return await Carts.find()
         } catch (error) {
@@ -12,7 +12,7 @@ class CartsDao {
         }
     }
 
-    async findOne(){
+    async findOne() {
         try {
             return await Carts.findOne()
         } catch (error) {
@@ -20,7 +20,7 @@ class CartsDao {
         }
     }
 
-    async findById(id){
+    async findById(id) {
         try {
             return await Carts.findById(id)
         } catch (error) {
@@ -28,30 +28,29 @@ class CartsDao {
         }
     }
 
-    async addProduct(cid, pid){
-        console.log('ola');
+    async addProduct(cid, pid) {
         try {
             const cart = await Carts.findById(cid)
             const product = await Products.findById(pid)
-            console.log(cart, product);
+            console.log(cart. products);
             console.log(cart.products);
             const prodIndex = cart.products.findIndex(prod => `${prod.productId}` === `${pid}`)
-            if(prodIndex >= 0) {
+            if (prodIndex >= 0) {
                 cart.products[prodIndex].quantity++
-            }else{
+            } else {
                 const newProduct = {
                     productId: product._id,
                     quantity: 1
                 }
                 cart.products.push(newProduct)
             }
-            return await Carts.findByIdAndUpdate(cid, cart, {returnDocument: 'after'})
+            return await Carts.findByIdAndUpdate(cid, cart, { returnDocument: 'after' })
         } catch (error) {
             return error
         }
     }
 
-    async save(){
+    async save() {
         try {
             return await Carts.save()
         } catch (error) {
@@ -59,7 +58,7 @@ class CartsDao {
         }
     }
 
-    async create(newProduct){
+    async create(newProduct) {
         try {
             return await Carts.create(newProduct)
         } catch (error) {
@@ -67,11 +66,20 @@ class CartsDao {
         }
     }
 
-    async deleteAll(){
+    async deleteAll() {
         return await Carts.deleteMany()
     }
 
 
+    async deleteOne(cid, pid) {
+        const cart = await Carts.findById(cid)
+        const product = await Products.findById(pid)
+        const prodIndex = cart.products.findIndex(prod => `${prod.quantity}` > 1)
+        console.log(prodIndex);
+        if(prodIndex > 1) {
+            cart.products[prodIndex].quantity--
+        }
+        return await Carts.findByIdAndDelete(cart, product)}
 }
 
 module.exports = CartsDao

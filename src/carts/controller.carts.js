@@ -3,17 +3,17 @@ const CartsDao = require('../dao/Carts.dao')
 
 const router = Router()
 const Carts = new CartsDao()
-
+// obtengo todos los carritos
 router.get('/', async (req, res) => {
     try {
         const carts = await Carts.findAll()
-        console.log(carts);
+        // console.log(carts);
         res.json({ carts: carts })
     } catch (error) {
         res.json({ error })
     }
 })
-
+// creo un carrito
 router.post('/', async (req, res) => {
     try {
         const newCart = await Carts.create({})
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ error: 'bad request' })
     }
 })
-
+// agrego un poducto a un carrito
 router.put('/:cid/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
@@ -35,7 +35,16 @@ router.put('/:cid/:pid', async (req, res) => {
         return res.status(400).json({ error: 'bad request' })
     }
 })
-
+// elimino un prrducto de un carrito
+router.delete('/:cid/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params
+        const newCart = await Carts.deleteOne(cid, pid)
+        res.json({newCart})
+    } catch (error) {
+        return res.status(400).json({error: error.message})
+    }
+})
 module.exports = router
         // const { cid, pid } = req.params
         // const cart = await Carts.findById(cid).populate('products.product')
