@@ -29,20 +29,62 @@ router.put('/:cid/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
         const carts = await Carts.addProduct(cid, pid)
-        res.json({carts})
+        res.json({ carts })
     } catch (error) {
         console.log(error);
         return res.status(400).json({ error: 'bad request' })
     }
 })
+// eliminar collection carts
+router.delete('/', (req, res) => {
+    Carts.deleteCollection()
+    res.json({message: 'collection deleted'})
+})
+
 // elimino un producto de un carrito
 router.delete('/:cid/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
         const newCart = await Carts.deleteOne(cid, pid)
-        res.json({message: 'Product removed from cart', cart: newCart})
+        res.json({ message: 'Product removed from cart', cart: newCart })
     } catch (error) {
-        return res.status(400).json({error: error.message})
+        return res.status(400).json({ error: error.message })
+    }
+})
+// eliminar un carrito entero
+router.delete('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params
+        const newCart = await Carts.deleteAll(cid)
+        res.json({message: 'cart cleaned'})
+    } catch (error) {
+        return res.status(500).json({error: error.message})
+    }
+})
+// actualizar el carrito con un array
+// por ahora no funciona, repite productos
+router.put('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params
+        const { products } = req.body
+
+        await Carts.updateCart(cid, products)
+        res.json({ message: 'cart uploaded' })
+    } catch (error) {
+        res.json({ message: error.message })
+    }
+})
+// actualizar cantidad de producto en carrito
+// por ahora me aumenta la cantidad en 1
+router.put('/:cid/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params
+        const { quantity } = req.body
+        console.log(quantity);
+        await Carts.updateCartQuantity(cid, pid, quantity)
+        res.json({ message: 'cart uploaded' })
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 })
 module.exports = router

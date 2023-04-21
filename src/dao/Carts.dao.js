@@ -66,7 +66,15 @@ class CartsDao {
         }
     }
 
-    async deleteAll() {
+    async deleteAll(cid) {
+        try {
+            return await Carts.findByIdAndDelete(cid)
+        } catch (error) {
+            return error
+        }
+    }
+
+    async deleteCollection(){
         return await Carts.deleteMany()
     }
 
@@ -78,9 +86,42 @@ class CartsDao {
         if (prodIndex) {
             cart.products.quantity--
             await cart.save()
-        } 
+        }
         cart.products.splice(prodIndex, 1)
         await cart.save()
+    }
+
+    async updateCart(cid, products) {
+        try {
+            const cart = await Carts.findById(cid)
+            const newProducts = []
+            products.forEach(prod => {
+                const prodIndex = cart.products.findIndex(p => p.prod === prod._id)
+
+                if (prodIndex !== 1) {
+                    cart.products.push(prod)
+                } else {
+                    cart.products[prodIndex].quantity += prod.quantity
+                }
+                newProducts.push(cart.products[prodIndex])
+            })
+            await cart.save()
+            return newProducts
+        } catch (error) {
+            return error.message
+        }
+    }
+
+    async updateCartQuantity(cid, pid, quantity) {
+        try {
+            const cart = await Carts.findById(cid)
+            const product = cart.products.find(prod => prod.product === pid)
+            if (!product) throw new Error('product not found')
+            product.quantity = quantity
+            return await cart.save()
+        } catch (error) {
+            throw error.message
+        }
     }
 }
 
