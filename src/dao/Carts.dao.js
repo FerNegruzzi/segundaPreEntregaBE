@@ -32,8 +32,8 @@ class CartsDao {
         try {
             const cart = await Carts.findById(cid)
             const product = await Products.findById(pid)
-            console.log(cart. products);
-            console.log(cart.products);
+            // console.log(cart. products);
+            // console.log(cart.products);
             const prodIndex = cart.products.findIndex(prod => `${prod.productId}` === `${pid}`)
             if (prodIndex >= 0) {
                 cart.products[prodIndex].quantity++
@@ -73,13 +73,15 @@ class CartsDao {
 
     async deleteOne(cid, pid) {
         const cart = await Carts.findById(cid)
-        const product = await Products.findById(pid)
-        const prodIndex = cart.products.findIndex(prod => `${prod.quantity}` > 1)
+        const prodIndex = cart.products.findIndex(prod => prod.quantity > 1)
         console.log(prodIndex);
-        if(prodIndex > 1) {
-            cart.products[prodIndex].quantity--
-        }
-        return await Carts.findByIdAndDelete(cart, product)}
+        if (prodIndex) {
+            cart.products.quantity--
+            await cart.save()
+        } 
+        cart.products.splice(prodIndex, 1)
+        await cart.save()
+    }
 }
 
 module.exports = CartsDao

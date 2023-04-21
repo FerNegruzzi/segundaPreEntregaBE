@@ -35,38 +35,14 @@ router.put('/:cid/:pid', async (req, res) => {
         return res.status(400).json({ error: 'bad request' })
     }
 })
-// elimino un prrducto de un carrito
+// elimino un producto de un carrito
 router.delete('/:cid/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
         const newCart = await Carts.deleteOne(cid, pid)
-        res.json({newCart})
+        res.json({message: 'Product removed from cart', cart: newCart})
     } catch (error) {
         return res.status(400).json({error: error.message})
     }
 })
 module.exports = router
-        // const { cid, pid } = req.params
-        // const cart = await Carts.findById(cid).populate('products.product')
-        // const product = await Products.findById(pid)
-        // if (!cart) return res.status(404).json({ error: 'Cart not found' })
-        // if (!product) return res.status(404).json({ error: 'Product not found' })
-        // const productInCart = cart.product.find(p => p.product._id.toString() === pid)
-        // if (productInCart) {
-        //     productInCart.quantity++
-        // } else {
-        //     cart.product.push({ product, quantity: 1 })
-        // }
-        // cart.total += product.price
-        // await Carts.save()
-        // return res.json(cart)
-
-
-
-        // const { title, quantity, price } = req.body
-        // const newCartInfo = {
-        //     title,
-        //     quantity,
-        //     price
-        // }
-        // console.log(newCartInfo);

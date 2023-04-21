@@ -6,13 +6,9 @@ const collectionName = 'product'
 const collectionSchema = new mongoose.Schema({
     title: String,
     description: String,
-    code: {
-        type: Number,
-        unique: true,
-        // required: true
-    },
-    price: Number,
-    image: String
+    category: String,
+    code: Number,
+    price: Number
 })
 
 

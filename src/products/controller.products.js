@@ -16,31 +16,46 @@ router.get('/loadItems', async (req, res) => {
         res.json({ message: newProducts })
     } catch (error) {
         console.log(error);
-        res.json({ error })
+        res.json({ error: error.message })
     }
 })
 
 router.get('/', async (req, res) => {
-    const { limit, page, sort, query } = req.query
     try {
-        const products = await ProductsDao.findAll({ query, limit, page, sort })
-        console.log( typeof req.query.query)
-        console.log(products);
-        res.json({ products: products })
+        const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const { category } = req.query || '';
+        const sort = req.query.sort || '';
+
+        const result = await ProductsDao.findAll(limit, page, category, sort)
+
+        res.json({
+            status: "success",
+            payload: result.products,
+            totalPages: result.totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.hasPrevPage ? `http://${req.headers.host}/products?page=${result.prevPage}&limit=${limit}&sort=${sort}&query=${category}` : null,
+            nextLink: result.hasNextPage ? `http://${req.headers.host}/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${category}` : null
+          })
+    
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 })
 
-router.post('/', uploader.single('image'), async (req, res) => {
+router.post('/', /*uploader.single('image'), */async (req, res) => {
     try {
-        const { title, description, code, price, image } = req.body
+        const { title, description, category, code, price } = req.body
         const newProductInfo = {
             title,
             description,
+            category,
             code,
-            price,
-            image: req.file.filename
+            price
         }
         const newProduct = await ProductsDao.create(newProductInfo)
         res.json({ message: newProduct })
