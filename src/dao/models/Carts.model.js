@@ -4,9 +4,8 @@ const collectionName = 'cart'
 
 const collectionSchema = new mongoose.Schema({
     products: [{
-        productId: mongoose.Schema.Types.ObjectId,
-        products:[],
-        quantity: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
     }]
 })
 

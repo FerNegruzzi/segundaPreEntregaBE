@@ -13,6 +13,19 @@ router.get('/', async (req, res) => {
         res.json({ error })
     }
 })
+
+// mostrar un carrito
+router.get('/:cid', function (req, res) {
+    Carts.findById(req.params.cid)
+    .populate('Product')
+    .exec(function (err, cart) {
+        if (err) {
+            res.status(500).json(err.message)
+        } else {
+            res.json(cart)
+        }
+    })
+})
 // creo un carrito
 router.post('/', async (req, res) => {
     try {
@@ -38,7 +51,7 @@ router.put('/:cid/:pid', async (req, res) => {
 // eliminar collection carts
 router.delete('/', (req, res) => {
     Carts.deleteCollection()
-    res.json({message: 'collection deleted'})
+    res.json({ message: 'collection deleted' })
 })
 
 // elimino un producto de un carrito
@@ -56,9 +69,9 @@ router.delete('/:cid', async (req, res) => {
     try {
         const { cid } = req.params
         const newCart = await Carts.deleteAll(cid)
-        res.json({message: 'cart cleaned'})
+        res.json({ message: 'cart cleaned' })
     } catch (error) {
-        return res.status(500).json({error: error.message})
+        return res.status(500).json({ error: error.message })
     }
 })
 // actualizar el carrito con un array
