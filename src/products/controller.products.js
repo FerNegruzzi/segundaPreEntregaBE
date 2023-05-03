@@ -24,12 +24,12 @@ router.get('/', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
-        const { category } = req.query || '';
+        const category = req.query.category || '';
         const sort = req.query.sort || '';
 
         const result = await ProductsDao.findAll(limit, page, category, sort)
 
-        res.json({
+        const data = {
             status: "success",
             payload: result.products,
             totalPages: result.totalPages,
@@ -40,10 +40,24 @@ router.get('/', async (req, res) => {
             hasNextPage: result.hasNextPage,
             prevLink: result.hasPrevPage ? `http://${req.headers.host}/products?page=${result.prevPage}&limit=${limit}&sort=${sort}&query=${category}` : null,
             nextLink: result.hasNextPage ? `http://${req.headers.host}/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${category}` : null
-          })
-    
+        }
+        // console.log(data);
+
+        res.render('products.handlebars', {
+            products: data,
+            totalPages: data.totalPages,
+            prevPage: data.prevPage,
+            nextPage: data.nextPage,
+            page: data.page,
+            hasPrevPage: data.hasPrevPage,
+            hasNextPage: data.hasNextPage,
+            prevLink: data.prevLink,
+            nextLink: data.nextLink,
+            allowProtoPropertiesByDefault: true,
+            allowProtoMethodsByDefault: true
+        })
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        res.status(500).json({ payload: error.message })
     }
 })
 

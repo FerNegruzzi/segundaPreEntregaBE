@@ -75,7 +75,6 @@ router.delete('/:cid', async (req, res) => {
     }
 })
 // actualizar el carrito con un array
-// por ahora no funciona, repite productos
 router.put('/:cid', async (req, res) => {
     try {
         const { cid } = req.params

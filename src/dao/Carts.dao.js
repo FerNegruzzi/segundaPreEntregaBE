@@ -32,8 +32,7 @@ class CartsDao {
         try {
             const cart = await Carts.findById(cid)
             const product = await Products.findById(pid)
-            // console.log(cart. products);
-            // console.log(cart.products);
+            console.log(cart. products);
             const prodIndex = cart.products.findIndex(prod => `${prod.productId}` === `${pid}`)
             if (prodIndex >= 0) {
                 cart.products[prodIndex].quantity++
