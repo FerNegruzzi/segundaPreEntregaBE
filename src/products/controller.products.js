@@ -43,8 +43,10 @@ router.get('/', async (req, res) => {
         }
         // console.log(data);
 
+        const parseData = JSON.parse(JSON.stringify(data.payload))
+
         res.render('products.handlebars', {
-            products: data,
+            products: parseData,
             totalPages: data.totalPages,
             prevPage: data.prevPage,
             nextPage: data.nextPage,
