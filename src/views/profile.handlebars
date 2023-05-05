@@ -1,12 +1,17 @@
-<h2>Profile</h2>
+<h2>Bienvenido {{user.first_name}}</h2>
 
-<label for="">Name:</label>
-<p>{{user.first_name}}</p>
+<form action="" id="profileForm">
+    <label for="">Name:</label>
+    <p>{{user.first_name}}</p>
 
-<label for="">Last Name:</label>
-<p>{{user.last_name}}</p>
+    <label for="">Last Name:</label>
+    <p>{{user.last_name}}</p>
 
-<label for="">Email:</label>
-<p>{{user.email}}</p>
+    <label for="">Email:</label>
+    <p>{{user.email}}</p>
+    <br>
+    <br>
+    <button type="submit">Log Out</button>
+</form>
 
-{{!-- <script src="/js/profile.js"></script> --}}
+<script src="/js/profile.js"></script>

@@ -1,8 +1,25 @@
+<h2>Bienvenido {{user.first_name}}</h2>
+
+<form action="" id="profileForm">
+    <label for="">Name:</label>
+    <p>{{user.first_name}}</p>
+
+    <label for="">Last Name:</label>
+    <p>{{user.last_name}}</p>
+
+    <label for="">Email:</label>
+    <p>{{user.email}}</p>
+    <br>
+    <br>
+    <button type="submit">Log Out</button>
+</form>
+<br>
+<br>
 <h1>All products</h1>
 <ul>
     {{#each products}}
     <li>
-        <h2>Title: {{this.title}}</h2>
+        <h2>Title:{{this.title}}</h2>
         <p>Description: {{this.description}}</p>
         <h3>Price: {{this.price}}</h3>
         <p>Category: {{this.category}}</p>
@@ -18,3 +35,6 @@
     <a href="{{nextLink}}">Next page</a>
     {{/if}}
 </div>
+
+<script src="/js/profile.js"></script>
+v

@@ -5,8 +5,7 @@ const publicAccess = require('../middlewares/publicAcces.midleware')
 const router = Router()
 
 router.get('/', privateAccess, (req, res) => {
-    const { user } = req.session
-    res.render('profile.handlebars', { user })
+    res.redirect('/products')
 })
 
 router.get('/signup', publicAccess, (req, res) => {

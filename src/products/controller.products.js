@@ -3,6 +3,7 @@ const uploader = require('../utils/multer.utils')
 const ProductsManager = require('../dao/ProductsManager.dao')
 const ProductsDaoFile = require('../dao/Products.dao')
 const Products = require('../dao/models/Products.model')
+const privateAccess = require('../middlewares/privateAccess.mddleware')
 
 const router = Router()
 const productManager = new ProductsManager()
@@ -20,7 +21,7 @@ router.get('/loadItems', async (req, res) => {
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/',privateAccess, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
@@ -42,10 +43,11 @@ router.get('/', async (req, res) => {
             nextLink: result.hasNextPage ? `http://${req.headers.host}/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${category}` : null
         }
         // console.log(data);
-
+        const {user} = req.session
         const parseData = JSON.parse(JSON.stringify(data.payload))
 
         res.render('products.handlebars', {
+            user: user,
             products: parseData,
             totalPages: data.totalPages,
             prevPage: data.prevPage,

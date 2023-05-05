@@ -29,6 +29,7 @@ router.get('/logout', (req, res) => {
     req.session.destroy(error => {
         if (error) return res.json({ error })
         res.redirect('/login')
+        console.log('Loged Out');
     })
 })
 
