@@ -1,25 +1,23 @@
 const { Router } = require('express')
 const Users = require('../dao/models/Users.model')
+const passport = require('passport')
 
 const router = Router()
 
-router.post('/', async (req, res) => {
+router.post('/', passport.authenticate('signup', { failureRedirect: '/users/failegister' }), async (req, res) => {
     try {
-        const { first_name, last_name, email, age, password } = req.body
-        const newUserInfo = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password
-        }
-
-        const user = await Users.create(newUserInfo)
-        res.status(201).json({status: 'succes', message: user})
+        // generar token
+        // const access_token = generateToken({email: user.email})
+        res.status(201).json({ status: 'succes', message: 'user registred' })
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ status: 'error', error: error.message })
     }
+})
+
+router.get('/failegister', (req, res) => {
+    console.log('strategy failed');
+    res.json({ error: 'Failed signup' })
 })
 
 module.exports = router
