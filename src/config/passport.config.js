@@ -1,6 +1,7 @@
 const passport = require('passport')
 const local = require('passport-local')
 const Users = require('../dao/models/Users.model')
+const GitHubStrategy = require('passport-github2')
 const { createHash, passwordValidate } = require('../utils/cryptPassword.util')
 
 const LocalStrategy = local.Strategy
@@ -46,18 +47,43 @@ const initPassport = () => {
                 done(error)
             }
         }))
-        
-        // passport.use('github')
 
-        // individualizamos los usuarios 
-        passport.serializeUser((user, done) => {
-            done(null, user.id)
-        })
+    passport.use('github', new GitHubStrategy({
+        clientID: process.env.GITID,
+        clientSecret: process.env.GITSECRET,
+        clientURL: process.env.GITURL
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            console.log(profile);
 
-        passport.deserializeUser(async(id, done) =>{
-            const user = await Users.findById(id)
+            const user = await Users.findOne({ email: profile._json.email })
+            if (!user) {
+                const newUserInfo = {
+                    first_name: profile._json.name,
+                    last_name: '',
+                    age: 19,
+                    email: profile._json.email,
+                    password: ''
+                }
+                const newUser = await Users.create(newUserInfo)
+                return done(null, newUser)
+            }
+
             done(null, user)
-        })
+        } catch (error) {
+            done(error)
+        }
+    }))
+
+    // individualizamos los usuarios 
+    passport.serializeUser((user, done) => {
+        done(null, user.id)
+    })
+
+    passport.deserializeUser(async (id, done) => {
+        const user = await Users.findById(id)
+        done(null, user)
+    })
 }
 
 module.exports = initPassport
