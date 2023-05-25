@@ -6,8 +6,6 @@ const router = Router()
 
 router.post('/', passport.authenticate('signup', { failureRedirect: '/users/failegister' }), async (req, res) => {
     try {
-        // generar token
-        // const access_token = generateToken({email: user.email})
         res.status(201).json({ status: 'succes', message: 'user registred' })
     } catch (error) {
         console.log(error.message);

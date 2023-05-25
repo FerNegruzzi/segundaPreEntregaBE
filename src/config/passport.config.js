@@ -1,12 +1,27 @@
 const passport = require('passport')
+const jwt = require('passport-jwt')
 const local = require('passport-local')
 const Users = require('../dao/models/Users.model')
 const GitHubStrategy = require('passport-github2')
 const { createHash, passwordValidate } = require('../utils/cryptPassword.util')
+const { generateToken } = require('../utils/jwt.utils')
+const cookieExtractor = require('../utils/cookieExtractor.util')
 
 const LocalStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
 
 const initPassport = () => {
+    passport.use('jwt', new JWTStrategy({ jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]), secretOrKey: process.env.SECRET_KEY },
+        async (jwt_paylad, done) => {
+            try {
+                done(null, jwt_paylad)
+            } catch (error) {
+                done(error)
+            }
+        }
+    ))
+
+
     passport.use('signup', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' },
         async (req, username, password, done) => {
             try {
@@ -26,7 +41,9 @@ const initPassport = () => {
                 }
                 const newUser = await Users.create(newUserInfo)
 
-                done(null, newUser)
+                const access_token = generateToken({ email: newUser.email })
+
+                done(null, access_token)
             } catch (error) {
                 done(error)
             }
