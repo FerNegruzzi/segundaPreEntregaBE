@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const ChatsDao = require('../dao/Messages.dao')
+const ChatsDao = require('../../dao/Messages.dao')
 
 const router = Router()
 const Chats = new ChatsDao()

@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const CartsDao = require('../dao/Carts.dao')
+const CartsDao = require('../../dao/Carts.dao')
 
 const router = Router()
 const Carts = new CartsDao()
