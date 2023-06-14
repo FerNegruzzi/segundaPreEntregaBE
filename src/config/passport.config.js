@@ -4,7 +4,7 @@ const local = require('passport-local')
 const Users = require('../dao/models/Users.model')
 const GitHubStrategy = require('passport-github2')
 const { createHash, passwordValidate } = require('../utils/cryptPassword.util')
-const { generateToken } = require('../utils/jwt.utils')
+const { generateToken, authToken } = require('../utils/jwt.utils')
 const cookieExtractor = require('../utils/cookieExtractor.util')
 const UserDTO = require('../DTO\'s/user.dto')
 
@@ -32,8 +32,8 @@ const initPassport = () => {
                 console.log(newUserInfo);
 
                 const access_token = generateToken({ email: newUser.email })
-                console.log(access_token);
-                done(null, access_token)
+                const token = authToken(req)
+                done(null, token)
             } catch (error) {
                 done(error)
             }
