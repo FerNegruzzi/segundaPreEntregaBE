@@ -6,6 +6,7 @@ const GitHubStrategy = require('passport-github2')
 const { createHash, passwordValidate } = require('../utils/cryptPassword.util')
 const { generateToken } = require('../utils/jwt.utils')
 const cookieExtractor = require('../utils/cookieExtractor.util')
+const UserDTO = require('../DTO\'s/user.dto')
 
 const LocalStrategy = local.Strategy
 const JWTStrategy = jwt.Strategy
@@ -25,24 +26,13 @@ const initPassport = () => {
     passport.use('signup', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' },
         async (req, username, password, done) => {
             try {
-                const { first_name, last_name, email, age, password } = req.body
-
-                const user = await Users.findOne({ email: username })
-                if (user) {
-                    console.log('user already created');
-                    return done(null, false)
-                }
-                const newUserInfo = {
-                    first_name,
-                    last_name,
-                    email,
-                    age,
-                    password: createHash(password)
-                }
+                const newUserInfo = new UserDTO(req.body)
+                
                 const newUser = await Users.create(newUserInfo)
+                console.log(newUserInfo);
 
                 const access_token = generateToken({ email: newUser.email })
-
+                console.log(access_token);
                 done(null, access_token)
             } catch (error) {
                 done(error)

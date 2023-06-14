@@ -1,9 +1,9 @@
-const productsController = require('../controllers/products/controller.products')
-const cartsController = require('../controllers/carts/controller.carts')
-const messagesController = require('../controllers/message/controller.messages')
-const usersController = require('../controllers/users/controller.users')
-const authController = require('../controllers/auth/controller.auth')
-const viewsTemplateController = require('../controllers/viewsTemplate/controller.viewsTemplate')
+const productsController = require('../controllers/controller.products')
+const cartsController = require('../controllers/controller.carts')
+const messagesController = require('../controllers/controller.messages')
+const usersController = require('../controllers/controller.users')
+const authController = require('../controllers/controller.auth')
+const viewsTemplateController = require('../controllers/controller.viewsTemplate')
 
 const router = app => {
     app.use('/products', productsController)

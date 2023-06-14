@@ -1,4 +1,4 @@
- const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 const {dbAdmin, dbPassword, dbHost} = require('../src/config/db.config')
 
 

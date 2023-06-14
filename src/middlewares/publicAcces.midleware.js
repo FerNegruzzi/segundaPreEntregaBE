@@ -1,7 +1,7 @@
-function publicAccess(req, res, next) {
-    if (req.session.user) return res.redirect('/')
+// function publicAccess(req, res, next) {
+//     if (req.session.user) return res.redirect('/')
 
-    next()
-}
+//     next()
+// }
 
-module.exports = publicAccess
+// module.exports = publicAccess
