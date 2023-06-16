@@ -43,7 +43,7 @@ router.get('/',privateAccess, async (req, res) => {
             nextLink: result.hasNextPage ? `http://${req.headers.host}/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${category}` : null
         }
         // console.log(data);
-        const {user} = req.session
+        const {user} = req.user
         const parseData = JSON.parse(JSON.stringify(data.payload))
 
         res.render('products.handlebars', {

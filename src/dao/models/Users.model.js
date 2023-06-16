@@ -5,6 +5,7 @@ const collectionName = 'user'
 const collectionSchema = new mongoose.Schema({
     first_name: String,
     last_name: String,
+    full_name: String,
     email: {
         type: String,
         unique: true,

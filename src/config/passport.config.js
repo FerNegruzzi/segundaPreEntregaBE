@@ -1,12 +1,16 @@
 const passport = require('passport')
 const jwt = require('passport-jwt')
 const local = require('passport-local')
-const Users = require('../dao/models/Users.model')
+// const Users = require('../dao/models/Users.model')
 const GitHubStrategy = require('passport-github2')
 const { createHash, passwordValidate } = require('../utils/cryptPassword.util')
 const { generateToken, authToken } = require('../utils/jwt.utils')
 const cookieExtractor = require('../utils/cookieExtractor.util')
 const UserDTO = require('../DTO\'s/user.dto')
+const UserDAO = require('../dao/Users.dao')
+const { createUser } = require('../services/users.service')
+
+const Users = new UserDAO()
 
 const LocalStrategy = local.Strategy
 const JWTStrategy = jwt.Strategy
@@ -17,7 +21,7 @@ const initPassport = () => {
             try {
                 done(null, jwt_paylad)
             } catch (error) {
-                done(error)
+                done(error) 
             }
         }
     ))
@@ -28,11 +32,11 @@ const initPassport = () => {
             try {
                 const newUserInfo = new UserDTO(req.body)
                 
-                const newUser = await Users.create(newUserInfo)
-                console.log(newUserInfo);
+                const newUser = await createUser(newUserInfo)
+                console.log(newUser);
 
                 const access_token = generateToken({ email: newUser.email })
-                const token = authToken(req)
+                const token = authToken(access_token)
                 done(null, token)
             } catch (error) {
                 done(error)
@@ -41,7 +45,7 @@ const initPassport = () => {
     passport.use('login', new LocalStrategy({ usernameField: 'email' },
         async (username, password, done) => {
             try {
-                const user = await Users.findOne({ email: username })
+                const user = await Users.getOne({ email: username })
                 if (!user) {
                     console.log('user not exist');
                     return done(null, false)

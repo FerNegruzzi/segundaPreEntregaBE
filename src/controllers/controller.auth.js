@@ -4,7 +4,7 @@ const passport = require('passport')
 
 const router = Router()
 // login
-router.post('/', passport.authenticate('login', { failureRedirect: '/auth/faillogin' }), async (req, res) => {
+router.post('/', passport.authenticate('login', { failureRedirect: '/auth/faillogin', session: false }), async (req, res) => {
     try {
         if (!req.user) return res.status(401).json({
             status: error,
@@ -19,6 +19,10 @@ router.post('/', passport.authenticate('login', { failureRedirect: '/auth/faillo
 
         res.json({ status: 'succes', message: 'Loged in' })
     } catch (error) {
+        if (error.code === 11000) {
+            console.log(error);
+            return res.status(400).json({ error: 'esta producto ya esta registrado' })
+        }
         res.status(500).json({ status: 'error', error: error.message })
     }
 })

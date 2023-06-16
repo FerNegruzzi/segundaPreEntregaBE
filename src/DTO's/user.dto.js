@@ -6,8 +6,8 @@ class UserDTO{
         this.last_name = info.last_name
         this.full_name = info.first_name + ' ' + info.last_name
         this.email = info.email
-        this.password = createHash(info.password)
         this.age = info.age
+        this.password = createHash(info.password)
         this.role = 'user'
     }
 }
