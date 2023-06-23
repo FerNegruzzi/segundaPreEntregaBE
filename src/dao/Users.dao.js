@@ -16,6 +16,10 @@ class UserDAO {
             throw error
         }
     }
+    
+    async deleteAllOnlyForDevs() {
+        await Users.deleteMany()
+      }
 }
 
 module.exports = UserDAO

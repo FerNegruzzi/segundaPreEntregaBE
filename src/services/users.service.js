@@ -15,8 +15,16 @@ const createUser = async newUserInfo => {
             html: `
                 <div>
                     <h1>Felicitaciones por registrarte!</h1>
+                    <img src="cid:dogoo.jpg"/>
                 </div>
-            `
+            `,
+            attachments: [
+                {
+                    filename: 'dogoo.jpg',
+                    path: process.cwd() + '/src/public/images/dogoo.jpg',
+                    cid: 'dogoo.jpg'
+                }
+            ]
         })
 
         return newUser 
