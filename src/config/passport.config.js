@@ -38,18 +38,18 @@ const initPassport = () => {
             try {
                 const newUserInfo = new UserDTO(req.body)
 
-                const user = await User.getOne({ email: username })
+                const newUser = await User.getOne({ email: username })
                 if (user) {
                     console.log('User already registed');
                     return done(null, false)
                 }
 
-                const newUser = await createUser(newUserInfo)
+                const user = await createUser(newUserInfo)
 
-                const access_token = generateToken({ email: newUser.email })
+                const access_token = generateToken({ email: user.email })
                 console.log(access_token);
 
-                return done(null, access_token)
+                done(null, access_token)
             } catch (error) {
                 done(error)
             }
@@ -58,6 +58,7 @@ const initPassport = () => {
         async (username, password, done) => {
             try {
                 const user = await User.getOne({ email: username })
+                console.log(user);
                 if (!user) {
                     console.log('user not exist');
                     return done(null, false)
@@ -65,7 +66,9 @@ const initPassport = () => {
 
                 if (!passwordValidate(password, user)) return done(null, false)
 
-                done(null, user)
+                const access_token = generateToken({ username, role: username.role })
+
+                done(null, access_token)
             } catch (error) {
                 done(error)
             }

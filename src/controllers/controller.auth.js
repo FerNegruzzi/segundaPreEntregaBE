@@ -1,10 +1,11 @@
 const { Router } = require('express')
 const Users = require('../dao/models/Users.model')
 const passport = require('passport')
+const passportCall = require('../utils/passportCall.util')
 
 const router = Router()
-// login
-router.post('/', passport.authenticate('login', { failureRedirect: '/auth/faillogin', session: false }), async (req, res) => {
+// loginfailureRedirect: '/auth/faillogin',
+router.post('/', passportCall('jwt'), passport.authenticate('login', {  session: false }), async (req, res) => {
     try {
         if (!req.user) return res.status(401).json({
             status: error,
