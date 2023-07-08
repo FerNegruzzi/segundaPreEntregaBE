@@ -9,6 +9,14 @@ class UserDAO {
         }
     }
 
+    async getOneById(id){
+        try {
+            return await Users.findById(id)
+        } catch (error) {
+            throw error
+        }
+    }
+
     async createNewUser(newUserInfo) {
         try {
             return await Users.create(newUserInfo)

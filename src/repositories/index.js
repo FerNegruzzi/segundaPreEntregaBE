@@ -1,6 +1,6 @@
-const UserDAO = require("../dao/Users.dao");
 const EnvirormentRepository = require("./envirorment.repository");
+const MessageAdapter = require('./factory')
 
-const envirorment = new EnvirormentRepository(new UserDAO())
+const envirorment = new EnvirormentRepository(new MessageAdapter())
 
-module.exports = envirorment
+module.exports = envirorment 

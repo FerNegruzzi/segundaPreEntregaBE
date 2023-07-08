@@ -1,15 +1,11 @@
-class EnvirormentRepository {
-    constructor(envirorment){
-        this.envirorment = envirorment
+class MessageRepository {
+    constructor(messageTool){
+        this.messageTool = messageTool
     }
 
-    async getOne(user){
-        await this.envirorment.getOne(user)
-    }
-
-    async createNewUser(newUserInfo){
-        await this.envirorment.createNewUser(newUserInfo)
+    async sendMessage(newUserInfo){
+        await this.messageTool.sendMessage(newUserInfo)
     }
 }
 
-module.exports = EnvirormentRepository
+module.exports = MessageRepository

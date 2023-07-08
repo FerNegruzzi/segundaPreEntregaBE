@@ -1,15 +1,14 @@
 const passport = require('passport')
 const jwt = require('passport-jwt')
 const local = require('passport-local')
-// const Users = require('../dao/models/Users.model')
 const GitHubStrategy = require('passport-github2')
-const { createHash, passwordValidate } = require('../utils/cryptPassword.util')
-const { generateToken, authToken } = require('../utils/jwt.utils')
+const { passwordValidate } = require('../utils/cryptPassword.util')
+// const { generateToken, authToken } = require('../utils/jwt.utils')
 const cookieExtractor = require('../utils/cookieExtractor.util')
 const UserDTO = require('../DTO\'s/user.dto')
 const UserDAO = require('../dao/Users.dao')
 const { createUser } = require('../services/users.service')
-const User = require('../repositories')
+
 
 
 
@@ -20,12 +19,13 @@ const JWTStrategy = jwt.Strategy
 
 const initPassport = () => {
     passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]),
+        jwtFromRequest: jwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.SECRET_KEY
     },
         async (jwt_payload, done) => {
             try {
-                done(null, jwt_payload)
+                const payload = Users.getOneById(jwt_payload.id)
+                done(null, payload)
             } catch (error) {
                 done(error)
             }
@@ -38,18 +38,18 @@ const initPassport = () => {
             try {
                 const newUserInfo = new UserDTO(req.body)
 
-                const newUser = await User.getOne({ email: username })
-                if (user) {
+                const checkNewUser = await Users.getOne({ email: username })
+                if (checkNewUser) {
                     console.log('User already registed');
                     return done(null, false)
                 }
 
-                const user = await createUser(newUserInfo)
+                const newUser = await createUser(newUserInfo)
 
-                const access_token = generateToken({ email: user.email })
-                console.log(access_token);
+                // const access_token = generateToken({ email: newUser.email })
+                // console.log(access_token);
 
-                done(null, access_token)
+                return done(null, newUser)
             } catch (error) {
                 done(error)
             }
@@ -57,20 +57,15 @@ const initPassport = () => {
     passport.use('login', new LocalStrategy({ usernameField: 'email' },
         async (username, password, done) => {
             try {
-                const user = await User.getOne({ email: username })
-                console.log(user);
+                const user = await Users.getOne({ email: username })
                 if (!user) {
-                    console.log('user not exist');
-                    return done(null, false)
+                    return done(null, false, { message: 'incorrect values' })
                 }
+                if (!passwordValidate(password, user)) return done(null, false, { message: 'incorrect values' })
 
-                if (!passwordValidate(password, user)) return done(null, false)
-
-                const access_token = generateToken({ username, role: username.role })
-
-                done(null, access_token)
+                return done(null, user, { message: 'Logged in' })
             } catch (error) {
-                done(error)
+                return done(error)
             }
         }))
 
@@ -82,7 +77,7 @@ const initPassport = () => {
         try {
             console.log(profile);
 
-            const user = await User.getOne({ email: profile._json.email })
+            const user = await Users.getOne({ email: profile._json.email })
             if (!user) {
                 const newUserInfo = {
                     first_name: profile._json.name,
@@ -91,7 +86,7 @@ const initPassport = () => {
                     email: profile._json.email,
                     password: ''
                 }
-                const newUser = await User.createNewUser(newUserInfo)
+                const newUser = await Users.createNewUser(newUserInfo)
                 return done(null, newUser)
             }
 
@@ -107,7 +102,7 @@ const initPassport = () => {
     })
 
     passport.deserializeUser(async (id, done) => {
-        const user = await User.getOne(id)
+        const user = await Users.getOne(id)
         done(null, user)
     })
 }

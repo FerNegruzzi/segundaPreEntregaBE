@@ -1,18 +1,17 @@
 const { Router } = require('express')
-const privateAccess = require('../middlewares/privateAccess.mddleware')
-const publicAccess = require('../middlewares/publicAcces.midleware')
+const passport = require('passport') 
 
 const router = Router()
 
-router.get('/', privateAccess, (req, res) => {
+router.get('/', passport.authenticate('jwt', {session: false})), (req, res) => {
     res.redirect('/products')
-})
+}
 
-router.get('/signup', publicAccess, (req, res) => {
+router.get('/signup', (req, res) => {
     res.render('signup.handlebars')
 })
 
-router.get('/login', publicAccess, (req, res) => {
+router.get('/login', (req, res) => {
     res.render('login.handlebars')
 })
 

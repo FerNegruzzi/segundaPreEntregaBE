@@ -1,32 +1,42 @@
 const { Router } = require('express')
 const Users = require('../dao/models/Users.model')
 const passport = require('passport')
-const passportCall = require('../utils/passportCall.util')
+const { generateToken } = require('../utils/jwt.utils')
+// const passportCall = require('../utils/passportCall.util')
 
 const router = Router()
 // loginfailureRedirect: '/auth/faillogin',
-router.post('/', passportCall('jwt'), passport.authenticate('login', {  session: false }), async (req, res) => {
-    try {
-        if (!req.user) return res.status(401).json({
-            status: error,
-            error: 'user or Password its incorrect'
-        })
-        // SESSION
-        // req.session.user = {
-        //     first_name: req.user.first_name,
-        //     last_name: req.user.last_name,
-        //     email: req.user.email
-        // }
+router.post('/', function (req, res, next) {
+    passport.authenticate('login', { session: false }, (error, user, info) => {
+        console.log(error);
+        try {
+            if (!user || error) return res.status(400).json({
+                message: info ? info.message : 'Login failed',
+                user   : user
+            })
 
-        res.json({ status: 'succes', message: 'Loged in' })
-    } catch (error) {
-        if (error.code === 11000) {
-            console.log(error);
-            return res.status(400).json({ error: 'esta producto ya esta registrado' })
+            req.login(
+                user,
+                { session: false },
+                async (error) => {
+                    if (error) return res.status(500).json({ message: 'internal server error' });
+
+                    const access_token = generateToken({ email: user.email })
+
+                    return res.json({ user, access_token })
+                }
+            )
+            res.json({ status: 'succes', message: 'Loged in' })
+        } catch (error) {
+            if (error.code === 11000) {
+                console.log(error);
+                return res.status(400).json({ error: 'esta producto ya esta registrado' })
+            }
+            res.status(500).json({ status: 'error', error: error.message })
         }
-        res.status(500).json({ status: 'error', error: error.message })
-    }
-})
+
+    })(req, res);
+});
 
 router.get('/github',
     passport.authenticate('github', { scope: ['user: email'] }),

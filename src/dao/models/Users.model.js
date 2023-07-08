@@ -12,6 +12,7 @@ const collectionSchema = new mongoose.Schema({
     },
     age: Number,
     password: String,
+    phone: String,
     carts: [{
         cart: {
             type: mongoose.Schema.Types.ObjectId,
