@@ -19,13 +19,20 @@ const JWTStrategy = jwt.Strategy
 
 const initPassport = () => {
     passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: jwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: cookieExtractor,
         secretOrKey: process.env.SECRET_KEY
     },
         async (jwt_payload, done) => {
             try {
-                const payload = Users.getOneById(jwt_payload.id)
-                done(null, payload)
+                const { expiration } = jwt_payload
+
+                if (Date.now() > expiration) {
+                    done('your token has expired', false)
+                }
+
+                const token = Users.getOne((user) => user.id === jwt_payload.id)
+                if (token) return done(null, token)
+                else return done(null, false)
             } catch (error) {
                 done(error)
             }
@@ -45,9 +52,6 @@ const initPassport = () => {
                 }
 
                 const newUser = await createUser(newUserInfo)
-
-                // const access_token = generateToken({ email: newUser.email })
-                // console.log(access_token);
 
                 return done(null, newUser)
             } catch (error) {

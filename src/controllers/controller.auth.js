@@ -6,36 +6,29 @@ const { generateToken } = require('../utils/jwt.utils')
 
 const router = Router()
 // loginfailureRedirect: '/auth/faillogin',
-router.post('/', function (req, res, next) {
-    passport.authenticate('login', { session: false }, (error, user, info) => {
-        console.log(error);
+router.post('/', (req, res, next) => {
+    passport.authenticate('login', { session: false }, (error, user) => {
         try {
             if (!user || error) return res.status(400).json({
-                message: info ? info.message : 'Login failed',
-                user   : user
+                message: 'Login failed',
             })
 
-            req.login(
-                user,
-                { session: false },
-                async (error) => {
-                    if (error) return res.status(500).json({ message: 'internal server error' });
+            req.login(user, { session: false }, (error) => {
+                if (error) res.send(error)
 
-                    const access_token = generateToken({ email: user.email })
+                const access_token = generateToken({ email: user.email })
 
-                    return res.json({ user, access_token })
-                }
-            )
+                return res.cookie('authToken', access_token).json({ user, access_token })
+            })
             res.json({ status: 'succes', message: 'Loged in' })
         } catch (error) {
             if (error.code === 11000) {
                 console.log(error);
-                return res.status(400).json({ error: 'esta producto ya esta registrado' })
+                return res.status(400).json({ error: 'esta usuario ya esta registrado' })
             }
             res.status(500).json({ status: 'error', error: error.message })
         }
-
-    })(req, res);
+    })(req, res, next);
 });
 
 router.get('/github',
