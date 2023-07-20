@@ -4,10 +4,18 @@ const ProductsManager = require('../dao/ProductsManager.dao')
 const ProductsDaoFile = require('../dao/Products.dao')
 const Products = require('../dao/models/Products.model')
 const privateAccess = require('../middlewares/privateAccess.midleware')
+const generateProducts = require('../utils/mock.utils')
 
 const router = Router()
 const productManager = new ProductsManager()
 const ProductsDao = new ProductsDaoFile()
+
+// establecems la cantidad de productos que queremos mockear en la query
+router.get('/mockingproducts', (req, res) => {
+    const { totalOfProducts } = req.query
+    const products = generateProducts(totalOfProducts)
+    res.json({ message: products })
+})
 
 router.get('/loadItems', async (req, res) => {
     try {
@@ -21,7 +29,7 @@ router.get('/loadItems', async (req, res) => {
     }
 })
 
-router.get('/',privateAccess, async (req, res) => {
+router.get('/', privateAccess, async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
@@ -43,7 +51,7 @@ router.get('/',privateAccess, async (req, res) => {
             nextLink: result.hasNextPage ? `http://${req.headers.host}/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${category}` : null
         }
         // console.log(data);
-        const {user} = req.user
+        const { user } = req.user
         const parseData = JSON.parse(JSON.stringify(data.payload))
 
         res.render('products.handlebars', {
