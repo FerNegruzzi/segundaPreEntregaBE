@@ -20,7 +20,7 @@ router.post('/', (req, res, next) => {
 
                 return res.cookie('authToken', access_token).json({ user, access_token })
             })
-            res.json({ status: 'succes', message: 'Loged in' })
+            // res.json({ status: 'succes', message: 'Loged in' })
         } catch (error) {
             if (error.code === 11000) {
                 console.log(error);

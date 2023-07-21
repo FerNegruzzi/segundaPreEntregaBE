@@ -8,9 +8,7 @@ const cookieExtractor = require('../utils/cookieExtractor.util')
 const UserDTO = require('../DTO\'s/user.dto')
 const UserDAO = require('../dao/Users.dao')
 const { createUser } = require('../services/users.service')
-
-
-
+const { secretKey } = require('./app.config')
 
 const Users = new UserDAO()
 
@@ -20,7 +18,7 @@ const JWTStrategy = jwt.Strategy
 const initPassport = () => {
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: cookieExtractor,
-        secretOrKey: process.env.SECRET_KEY
+        secretOrKey: secretKey
     },
         async (jwt_payload, done) => {
             try {
