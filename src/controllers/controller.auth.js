@@ -20,13 +20,10 @@ router.post('/', (req, res, next) => {
 
                 return res.cookie('authToken', access_token).json({ user, access_token })
             })
-            // res.json({ status: 'succes', message: 'Loged in' })
+           req.logger.info('sesion iniciada con exito')
+           res.json({ status: "success", message: "Sesion iniciada" });
         } catch (error) {
-            if (error.code === 11000) {
-                console.log(error);
-                return res.status(400).json({ error: 'esta usuario ya esta registrado' })
-            }
-            res.status(500).json({ status: 'error', error: error.message })
+            req.logger.error('error al iniciar sesion')
         }
     })(req, res, next);
 });

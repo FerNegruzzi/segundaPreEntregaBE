@@ -11,19 +11,16 @@ router.post('/', passport.authenticate('signup',
     { failureRedirect: '/users/failegister', session: false }),
     async (req, res) => {
         try {
+            req.logger.info('User registred')
             res.status(201).json({ status: 'succes', message: 'user registred', user: req.user })
         } catch (error) {
-            if (error.code === 11000) {
-                console.log(error);
-                return res.status(400).json({ error: 'user already registred, try with other email.' })
-            }
-            console.log(error.message);
-            res.status(500).json({ status: 'error', error: error.message })
+            req.logger.error('Error al crear usuario')
+            res.status(500).json({ status: 'error', error: 'Internal server error' })
         }
     })
 
 router.get('/failegister', (req, res) => {
-    console.log('strategy failed');
+    req.logger.error('strategy failed');
     res.json({ error: 'Failed signup' })
 })
 

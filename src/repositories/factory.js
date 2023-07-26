@@ -1,13 +1,13 @@
 const { envirorment } = require("../config/app.config");
 
 switch (envirorment) {
-    case 'production':
-        console.log('envio con email');
-        module.exports = require('../adapters/mail.adapter')
+    case 'prod':
+        console.log('prod');
+        module.exports = require('../adapters/sms.adapter')
         break;
 
-    case 'testing':
-        console.log('envio con sms');
-        module.exports = require('../adapters/sms.adapter')
+    case 'dev':
+        console.log('dev');
+        module.exports = require('../adapters/mail.adapter')
         break;
 }

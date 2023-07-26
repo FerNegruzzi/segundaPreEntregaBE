@@ -11,12 +11,10 @@ const generateToken = user => {
 }
 
 const authToken = (req, res, next) => {
-    const authHeader = req.headers.authorization
-
-    if (!authHeader)
+    const authCookie = req.cookies['authToken']
+    if (!authCookie)
         return res.status(401).json({ status: 'error', error: 'Not authenticated' })
 
-    const token = authHeader.split(' ')[1]
 
     jwt.verify(token, SECRET_KEY, (error, credentials) => {
         if (error)

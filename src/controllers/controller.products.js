@@ -29,7 +29,7 @@ router.get('/loadItems', async (req, res) => {
     }
 })
 
-router.get('/', privateAccess, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;

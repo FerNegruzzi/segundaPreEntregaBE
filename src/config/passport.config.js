@@ -77,8 +77,6 @@ const initPassport = () => {
         clientURL: process.env.GITURL
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            console.log(profile);
-
             const user = await Users.getOne({ email: profile._json.email })
             if (!user) {
                 const newUserInfo = {
