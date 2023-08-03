@@ -8,7 +8,12 @@ const collectionSchema = new mongoose.Schema({
     description: String,
     category: String,
     code: Number,
-    price: Number
+    price: Number,
+    owner: {
+        type: String,
+        default: 'admin',
+        trim: true
+    }
 })
 
 
