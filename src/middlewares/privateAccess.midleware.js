@@ -1,5 +1,6 @@
 function privateAccess(req, res, next) {
-    if (!req.user) return res.redirect('/login')
+    // console.log(req);
+    if (!req.cookies) return res.redirect('/login')
 
     next()
 }

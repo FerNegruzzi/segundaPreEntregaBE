@@ -1,5 +1,5 @@
 function publicAccess(req, res, next) {
-    if (req.user) return res.redirect('/')
+    if (req.cookies) return res.redirect('/')
 
     next()
 }

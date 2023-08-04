@@ -8,7 +8,7 @@ const Users = new UserDAO()
 const router = Router()
 
 router.post('/', passport.authenticate('signup',
-    { failureRedirect: '/users/failegister', session: false }),
+    { failureRedirect: '/users/failRegister', session: false }),
     async (req, res) => {
         try {
             req.logger.info('User registred')
@@ -19,7 +19,7 @@ router.post('/', passport.authenticate('signup',
         }
     })
 
-router.get('/failegister', (req, res) => {
+router.get('/failRegister', (req, res) => {
     req.logger.error('strategy failed');
     res.json({ error: 'Failed signup' })
 })

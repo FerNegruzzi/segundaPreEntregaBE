@@ -10,7 +10,7 @@ const loggerController = require('../controllers/controller.logger')
 const { verifyToken } = require('../utils/jwt.utils')
 
 const router = app => {
-    app.use('/products', verifyToken, productsController)
+    app.use('/products', productsController)
     app.use('/carts', cartsController)
     app.use('/messages', messagesController)
     app.use('/users', usersController)
@@ -18,6 +18,7 @@ const router = app => {
     app.use('/current', verifyToken, currentController)
     app.use('/loggerTest', loggerController)
     app.use('/', viewsTemplateController)
+    
 }
 
 module.exports = router

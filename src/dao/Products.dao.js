@@ -70,6 +70,14 @@ class ProductsDao {
         return await Products.deleteMany()
     }
 
+
+    async updateOne(id, data) {
+        try {
+          return await Products.findByIdAndUpdate(id, data, { new: true });
+        } catch (error) {
+          return error;
+        }
+      }
     // async paginate(query, options){
     //     try {
     //         return await Products.paginate({query},{options})

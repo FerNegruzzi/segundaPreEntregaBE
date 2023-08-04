@@ -1,0 +1,278 @@
+openapi:
+info: 
+  title: API Products
+  version: "1.0"
+paths:
+  /products:
+    post:
+      summary: Crear producto
+      tags: 
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/addProduct"
+      responses:
+        "200":
+          description: Producto agregardo con exito 
+        "400":
+          description: Este producto ya esta registrado
+        "500":
+          description: Internal server error
+    get:
+      summary: Obtener todos los productos
+      tags:
+        - Products
+      responses:
+        "200": 
+          description: Obtiene todos los productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Products"
+        "500":
+          description: Internal server error       
+    delete:
+      summary: Eliminar TODOS los productos(solo para desarrolladores)
+      tags:
+        - Products
+      responses:
+        "200": 
+          description: Todos los productos fueron borrados
+  /products/${pid}:
+    patch:
+      summary: Actualizar un producto
+      tags:
+        - Products 
+      parameters:
+        - name: pid
+          in: params 
+          required: true
+          description: Id del producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: Producto actualizado
+        "500":
+          description: Internal server error
+  /products/${limit}:
+    get:
+      summary: Obtenes los productos con un limite
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          description: Obtenes la cantidad de productos que estableciste en el limit
+          schemas:
+            type: string
+      responses:
+        "200":  
+          description: Productos con limit
+          content:
+            application/json:
+              schemas:
+              $ref: "#/components/schemas/Products"
+        "500":
+          description: Internal server error  
+  /products/${page}:
+    get:
+      summary: Obtengo una pagina especifica de todos los productos
+      tags: 
+        - Products
+      parameters:
+        - name: page
+          in: query
+          required: true
+          description: Obtenes la pagina seleccionada
+          schemas:
+            type: string
+      responses:
+        "200":
+          description: Pagina seleccionada
+          content:
+            application/json:
+              schemas:
+              $ref: "#/components/schemas/Products"
+        "500":
+          description: Internal server error  
+  /products/${category}:
+    get:  
+      summary: Obtenes los productos de una categoria en especifica 
+      tags:
+        - Products
+      parameters:
+        - name: category
+          in: query
+          required: true
+          description: Obtenes los productos de una categoria 
+          schemas:
+            type: string
+      responses:
+        "200":
+          description: Productos por categoria
+          content:
+            application/json:
+              schemas:
+              $ref: "#/components/schemas/Products"
+        "500":
+          description: Internal server error  
+  /products/${sort}:
+    get:
+      summary: Obtenes los productos en un orden especifico
+      tags: 
+        - Products
+      parameters:
+        - name: sort
+          in: query
+          required: true
+          description: Obtenes los productos ordenados
+          schemas:
+            type: string
+      responses:
+        "200":  
+          description: Productos ordenados
+          content:
+            application/json:
+              schemas:
+              $ref: "#/components/schemas/Products"
+        "500":
+          description: Internal server error  
+  /products/mockingproducts:
+    get:
+      summary: Obtiene la cantidad de productos que le definamos en la query, con ?totalOfProducts=(numero)
+      tags:
+        - Products
+      parameters:
+        - name: totalOfProducts
+          in: path
+          required: true
+          description: Cantidad de productos que queremos mockear
+      responses:
+        "200":
+          description: Productos generados con exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Products"
+        "500":
+          description: Error al generar los productos
+  /products/loadItems:
+    get:
+      summary: Obtiene 100 productos aleatorios
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Productos generados con exito 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Products"
+
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id de mongo
+        title:
+          type: string
+          description: Title
+        description:
+          type: string
+          description: Description
+        category: 
+          type: string
+          description: Category
+        code:
+          type: number
+          description: Code 
+        price:
+          type: number
+          description: Price 
+        owner: 
+          type: string
+          description: Owner
+      example:
+        _id: ObjectId($i90234nds89230)
+        title: Skate
+        description: La mejor tabla de skate
+        category: Deporte
+        code: 3428762956
+        price: $100
+        owner: Fermin
+  requestBodies:
+    addProduct:
+      description: Informacion para crear un producto
+      properties:
+        title:
+          type: string
+          description: Titulo del producto
+        description:
+          type: string
+          description: Descripcion del producto
+        category: 
+          type: string
+          description: Categoria del producto
+        code:
+          type: number
+          description: Codigo del producto 
+        price:
+          type: number
+          description: Precio del producto 
+        owner: 
+          type: string
+          description: Dueño del producto
+      example:
+        title: Titulo del producto
+        description: Descripcion del producto
+        category: Categoria del producto
+        code: Codigo del producto
+        price: Precio del producto
+        owner: Dueño del producto
+    updateProduct:
+      description: Informacion para actualizar un producto
+      properties:
+        title:
+          type: string
+          description: Titulo del producto
+        description:
+          type: string
+          description: Descripcion del producto
+        category: 
+          type: string
+          description: Categoria del producto
+        code:
+          type: number
+          description: Codigo del producto 
+        price:
+          type: number
+          description: Precio del producto 
+        owner: 
+          type: string
+          description: Dueño del producto
+      example:
+        title: Trucks
+        description: Los mejores trucks de skate
+        category: Deporte
+        code: 3428762956
+        price: $75
+        owner: Julian

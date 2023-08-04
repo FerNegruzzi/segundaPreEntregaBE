@@ -1,0 +1,183 @@
+openapi: "3.0.1"
+info:
+  title: API Carts
+  version: "1.0"
+paths:
+  /carts:
+    post:
+      summary: Crear un carrito
+      tags:
+        - Carts
+      responses:
+        "200":  
+          description: Carrito creado con exito
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Carts"
+        "500":
+          description: Error al crear el carrito
+    get:
+      summary: Obtener todos los carritos
+      tags:
+        - Carts 
+      responses:
+        "200":
+          description: Todos los carritos encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Carts"
+        "500":
+          description: no se encontro ningun carrito
+    delete:
+      summary: Eliminar TODOS los carritos (solo para desarrolladores)
+      tags:
+        - Carts 
+      responses:
+        "200":  
+          description: TODOS los carritos fueron eliminados
+        "500":
+          description: Internal server error
+  /carts/${cid}:
+    get:
+      summary: Obtener un solo carrito
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Obtener carrito por Id
+      responses:
+        "200":
+          description: Carrito encontrado
+          content:
+            application/json:
+              schema:
+              type: object
+              items:
+              $ref: "#/components/schemas/Carts"
+        "500":  
+          description: Internal server error
+    delete:
+      summary: Eliminar un solo carrito
+      tags: 
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Eliminar un solo carrito
+      responses:
+        "200":
+          description: Carrito eliminado
+        "500":
+          description: Internal server error
+    put:
+      summary: actualizar carrito con un array
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Actuaizar un carrito
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateCart"
+      responses:
+        "200":
+          description: Carrito actualizado
+        "500":
+          description: Internal server error
+  /carts/${cid}/${pid}:
+    delete: 
+      summary: Eliminar un producto de un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid and pid
+          in: path
+          required: true
+          description: Eliminar un producto de un carrito
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateCart"
+      responses:
+        "200":
+          description: Producto eliminado
+        "500":
+          description: Internal server error
+    put:
+      summary: Agregar un producto a un Carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid and pid
+          in: path
+          required: true
+          description: Agregar un producto a un carrito
+      responses:
+        "200":
+          description: Producto agregardo
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#/components/schemas/Carts"
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    Carts:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Prductos en el carrito
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: Id del producto
+              quantity:
+                type: number
+                description: Cantidad del producto
+      example:
+        product: Id del producto
+        quantity: Cantidad del producto
+  requestBodies:
+    updateCart:
+      description: Informacion para actualizar un carrito
+      properties:
+        productos:
+          type: array
+          description: Array con nuevos productos
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: Id del producto
+              quantity:
+                type: number
+                description: Cantidad de productos
+      example:
+        productos:
+          [
+            { product: 98174bd781211, quantity: 5 },
+            { product: 18961hds17, quantity: 8 },
+            { product: 89790812d89, quantity: 3 },
+          ]

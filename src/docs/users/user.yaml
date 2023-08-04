@@ -1,0 +1,106 @@
+openapi: "3.0.1"
+info:
+  title: API Users
+  version: "1.0"
+paths:
+  /users:
+    post:
+      summary: Crea un usuario
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Usuario creado con exito 
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "failRegister":
+          description: Si ocurre un error, redirige a fail Register
+    delete:
+      summary: Eliminar TODOS los usuarios(solo para desarrolladores)
+      tags: 
+        - Users 
+      responses:
+        "200":
+          description: TODOS los usuarios fueron eliminados
+  /auth:
+    post:
+      summary: Iniciar sesion
+      tags: 
+        - Users 
+      responses:
+        "200":
+          description: Inicio de sesion exitoso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserLogin"
+        "500":  
+          description: Internal server error
+
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id de mongo
+        first_name:
+          type: string
+          description: First name
+        last_name: 
+          type: string
+          description: Last name
+        full_name:
+          type: string
+          description: Full name
+        email:
+          type: string
+          description: Email
+        age:
+          type: number
+          description: Age
+        password: 
+          type: string
+          description: Password 
+        phone: 
+          type: number
+          description: Phone number 
+        carts:
+          type: array
+          description: Your cart
+        role: 
+          type: string
+          description: User rol
+      example:
+        _id: ObjectId("af87987f997869s969")
+        first_name: Fermin
+        last_name: Negruzzi
+        full_name: Fermin Negruzzi
+        email: fernegruzzi@gmail.com
+        age: 19
+        password: asijdaoif897123bnjbnsda976321b09sd78
+        phone: 5674-234564
+        carts: [products...]
+        role: admin
+    UserLogin:
+      type: object
+      properties:
+        email: 
+          type: string
+          description: Email
+        password:
+          type: string
+          description: Password 
+      example:
+        email: fernegruzzi@gmail.com
+        password: sd87u348729yuisd832
+

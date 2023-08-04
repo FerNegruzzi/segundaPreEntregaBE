@@ -1,9 +1,11 @@
 const { Router } = require('express')
-const passport = require('passport') 
+// const passport = require('passport') 
+const { verifyToken } = require('../utils/jwt.utils')
+const privateAccess = require('../middlewares/privateAccess.midleware')
 
 const router = Router()
 
-router.get('/', passport.authenticate('jwt', {session: false})), (req, res) => {
+router.get('/', privateAccess), (req, res) => {
     res.redirect('/products')
 }
 

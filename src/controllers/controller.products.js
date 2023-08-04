@@ -95,6 +95,23 @@ router.post('/', /*uploader.single('image'), */async (req, res) => {
     }
 })
 
+router.patch('/:pid', async (req, res) => {
+    try {
+        const { pid } = req.params;
+        const data = req.body
+        const product = await Products.findById(pid)
+
+        if (req.session.user.role === 'administrador' || (req.session.user.email !== 'premium' && product.owner !== 'premium')) {
+            return new Error('Unauthorized')
+        }
+
+        await ProductsDao.updateOne(pid, data);
+        res.status(200).json('Producto actualizado')
+    } catch (error) {
+        res.json({ message: error })
+    }
+})
+
 router.delete('/deleteAll', async (req, res) => {
     await ProductsDao.deleteAll()
     res.json({ message: 'deleted all' })
