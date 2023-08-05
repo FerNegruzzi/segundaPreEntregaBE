@@ -51,11 +51,11 @@ router.get('/', async (req, res) => {
             nextLink: result.hasNextPage ? `http://${req.headers.host}/products?page=${result.nextPage}&limit=${limit}&sort=${sort}&query=${category}` : null
         }
         // console.log(data);
-        const { user } = req.user
+        // const { user } = req.user
         const parseData = JSON.parse(JSON.stringify(data.payload))
 
         res.render('products.handlebars', {
-            user: user,
+            // user: user,
             products: parseData,
             totalPages: data.totalPages,
             prevPage: data.prevPage,
@@ -84,7 +84,7 @@ router.post('/', /*uploader.single('image'), */async (req, res) => {
             price
         }
         const newProduct = await ProductsDao.create(newProductInfo)
-        res.json({ message: newProduct })
+        res.json({ message: 'Product created', product: newProduct })
     } catch (error) {
         if (error.code === 11000) {
             console.log(error);

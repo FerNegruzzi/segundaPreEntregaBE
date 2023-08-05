@@ -7,8 +7,7 @@ const Users = new UserDAO()
 
 const router = Router()
 
-router.post('/', passport.authenticate('signup',
-    { failureRedirect: '/users/failRegister', session: false }),
+router.post('/', passport.authenticate('signup', { session: false }),
     async (req, res) => {
         try {
             req.logger.info('User registred')

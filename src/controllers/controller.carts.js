@@ -15,16 +15,18 @@ router.get('/', async (req, res) => {
 })
 
 // mostrar un carrito
-router.get('/:cid', function (req, res) {
-    Carts.findById(req.params.cid)
-    .populate('Product')
-    .exec(function (err, cart) {
-        if (err) {
-            res.status(500).json(err.message)
+router.get('/:cid', async (req, res) => {
+    try {
+        const cart = Carts.findById(req.params.cid)
+        if (!cart) {
+            res.status(404).json({ error: "Carrito No encontrado" });
         } else {
-            res.json(cart)
+            res.json({ message: cart });
         }
-    })
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 // creo un carrito
 router.post('/', async (req, res) => {
