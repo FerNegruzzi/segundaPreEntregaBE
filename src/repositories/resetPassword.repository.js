@@ -1,7 +1,7 @@
 const {port} = require('../config/app.config')
 const { generateToken, verifyToken } = require('../utils/jwt.utils')
 const { passwordValidate, createHash } = require('../utils/cryptPassword.util')
-// const logger = require('../utils/logger.utils')
+const logger = require('../utils/logger.utils')
 const transport = require('../utils/mail.utils')
 const Users = require('../dao/models/Users.model')
 
@@ -18,9 +18,9 @@ class ResetPasswordRepository {
             }
             transport.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    req.logger.error('Error al enviar el correo', error)
+                    logger.error('Error al enviar el correo', error)
                 } else {
-                    req.logger.info('Correo enviado', info.response)
+                    logger.info('Correo enviado', info.response)
                 }
             })
         } catch (error) {

@@ -10,20 +10,26 @@ const collectionSchema = new mongoose.Schema({
         type: String,
         unique: true,
     },
-    age: Number,
     password: String,
     phone: String,
-    carts: [{
-        cart: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Cart'
-        }
-    }],
+    age: Number,
+    cartId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart'
+
+    },
     role: {
         type: String,
         enum: ['user', 'admin', 'premium'],
         default: 'user'
-    } 
+    },
+    documents: [
+        {
+            name: String,
+            reference: String
+        }
+    ],
+    last_connection: String
 })
 
 const Users = mongoose.model(collectionName, collectionSchema)

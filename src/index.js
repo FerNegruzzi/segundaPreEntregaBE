@@ -9,7 +9,7 @@ const router = require('./router')
 const mongoConnect = require('../db')
 const initPassport = require('./config/passport.config')
 const passport = require('passport')
-const addLogger = require('./utils/logger.utils')
+// const logger = require('./utils/logger.utils')
 
 const app = express()
 
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 app.use(morgan('dev'))
 
-app.use(addLogger)
+// app.use(logger)
 
 app.use(cookieParser())
 app.use(session({

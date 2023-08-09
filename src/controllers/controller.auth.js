@@ -3,28 +3,57 @@ const Users = require('../dao/models/Users.model')
 const passport = require('passport')
 const { generateToken } = require('../utils/jwt.utils')
 const ResetPasswordRepository = require('../repositories/resetPassword.repository')
+const logger = require('../utils/logger.utils')
 // const passportCall = require('../utils/passportCall.util')
 
 const router = Router()
 // loginfailureRedirect: '/auth/faillogin',
 router.post('/', (req, res, next) => {
-    passport.authenticate('login', { session: false }, (error, user) => {
-        console.log(req.cookies);
+    passport.authenticate('login', async (error, user) => {
+        // console.log(req.cookies);
         try {
-            if (!user || error) return res.status(400).json({
-                message: 'Login failed',
-            })
-            if(!req.cookies){
+            if (!user || error) {
+                logger.error('error', error)
+                return res.status(400).json({
+                    message: 'Login failed',
+                })
+
+            }
+
+
+            req.session.user = {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                full_name: user.full_name,
+                email: user.email,
+                phone: user.phone,
+                age: user.age,
+                cartId: user.cartId,
+                role: user.role
+            };
+            if (!req.cookies) {
                 req.login(user, { session: false }, (error) => {
                     if (error) res.send(error)
-    
+
                     const access_token = generateToken({ email: user.email })
-    
+
                     return res.cookie('authToken', access_token).json({ user, access_token })
-                })}
-                req.logger.info('sesion iniciada con exito')
-                res.json({ status: "success", message: "Sesion iniciada" });
-            
+                })
+            }
+            const nowDate = new Date()
+
+            const day = nowDate.getDate().toString().padStart(2, '0')
+            const month = (nowDate.getMonth() + 1).toString().padStart(2, '0')
+            const year = nowDate.getFullYear().toString().slice(-2)
+            const hours = nowDate.getHours().toString().padStart(2, '0')
+            const minutes = nowDate.getMinutes().toString().padStart(2, '0')
+
+
+            const date = `${day}/${month}/${year} at: ${hours}:${minutes}`
+            await Users.findByIdAndUpdate(user._id, { last_connection: date })
+            logger.info('sesion iniciada con exito')
+            res.json({ status: "success", message: "Sesion iniciada" });
+
         } catch (error) {
             throw error
         }
@@ -42,11 +71,11 @@ router.get('/githubcallback',
         res.redirect('/')
     })
 
-router.get('/logout', (req, res) => {
+router.get('/logout', async (req, res) => {
     req.session.destroy(error => {
         if (error) return res.json({ error })
-        res.redirect('/login')
-        console.log('Loged Out');
+        res.json('Logged out')
+        logger.info('Logged out')
     })
 })
 
@@ -67,7 +96,7 @@ router.post('/forgotPassword', async (req, res) => {
         const user = await Users.findOne({ email: email })
 
         if (!user) {
-            req.logger.error('User not found, verify your email!')
+            logger.error('User not found, verify your email!')
         }
         const createToken = await resetPasswordRepository.createToken(email, res)
 
@@ -94,7 +123,7 @@ router.post('/resetPassword/:email', async (req, res) => {
 
     try {
         await resetPasswordRepository.resetPassword(newPassword, authToken, email)
-        req.logger.info('Contraseña cambiada con exito')
+        logger.info('Contraseña cambiada con exito')
     } catch (error) {
         throw error
     }

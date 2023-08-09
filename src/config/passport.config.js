@@ -9,6 +9,7 @@ const UserDTO = require('../DTO\'s/user.dto')
 const UserDAO = require('../dao/Users.dao')
 const { createUser } = require('../services/users.service')
 const { secretKey } = require('./app.config')
+const logger = require('../utils/logger.utils')
 
 const Users = new UserDAO()
 
@@ -61,10 +62,14 @@ const initPassport = () => {
             try {
                 const user = await Users.getOne({ email: username })
                 if (!user) {
+                    logger.error('Incorrect values')
                     return done(null, false, { message: 'incorrect values' })
                 }
-                if (!passwordValidate(password, user)) return done(null, false, { message: 'incorrect values' })
-
+                if (!passwordValidate(password, user)) {
+                    logger.error('Incorrect values')
+                    return done(null, false, { message: 'incorrect values' })
+                }
+                logger.info('Loged in')
                 return done(null, user, { message: 'Logged in' })
             } catch (error) {
                 return done(error)

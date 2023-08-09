@@ -1,12 +1,13 @@
 const {Router} = require('express')
 const router = Router()
+const logger = require('../utils/logger.utils')
 
 router.get('/', (req, res) => {
-  req.logger.debug('Nivel Debug')
-  req.logger.info('Nivel Info')
-  req.logger.warning('Nivel Warning')
-  req.logger.error('Nivel Error')
-  req.logger.fatal('Nivel Fatal')
+  logger.debug('Nivel Debug')
+  logger.info('Nivel Info')
+  logger.warning('Nivel Warning')
+  logger.error('Nivel Error')
+  logger.fatal('Nivel Fatal')
 
   res.json('Prueba de logs exitosa')
 })

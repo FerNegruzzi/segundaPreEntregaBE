@@ -24,6 +24,14 @@ class UserDAO {
             throw error
         }
     }
+
+    async updateOne(user){
+        try {
+            return await Users.updateOne(user)
+        } catch (error) {
+            throw error
+        }
+    }
     
     async deleteAllOnlyForDevs() {
         await Users.deleteMany()
