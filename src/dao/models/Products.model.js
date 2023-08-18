@@ -9,6 +9,7 @@ const collectionSchema = new mongoose.Schema({
     category: String,
     code: Number,
     price: Number,
+    stock: Number,
     owner: {
         type: String,
         default: 'admin',

@@ -4,6 +4,7 @@ const passport = require('passport')
 const { generateToken } = require('../utils/jwt.utils')
 const ResetPasswordRepository = require('../repositories/resetPassword.repository')
 const logger = require('../utils/logger.utils')
+const { DateTime } = require('luxon');
 // const passportCall = require('../utils/passportCall.util')
 
 const router = Router()
@@ -19,18 +20,19 @@ router.post('/', (req, res, next) => {
                 })
 
             }
+            // req.session.user = {
+            //     first_name: user.first_name,
+            //     last_name: user.last_name,
+            //     full_name: user.full_name,
+            //     email: user.email,
+            //     phone: user.phone,
+            //     age: user.age,
+            //     cartId: user.cartId,
+            //     role: user.role
+            // };
+            // req.session.user = req.user
+            // console.log(req.user);
 
-
-            req.session.user = {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                full_name: user.full_name,
-                email: user.email,
-                phone: user.phone,
-                age: user.age,
-                cartId: user.cartId,
-                role: user.role
-            };
             if (!req.cookies) {
                 req.login(user, { session: false }, (error) => {
                     if (error) res.send(error)
@@ -40,17 +42,9 @@ router.post('/', (req, res, next) => {
                     return res.cookie('authToken', access_token).json({ user, access_token })
                 })
             }
-            const nowDate = new Date()
+            const argentinaTime = DateTime.now().setZone('America/Argentina/Buenos_Aires')
 
-            const day = nowDate.getDate().toString().padStart(2, '0')
-            const month = (nowDate.getMonth() + 1).toString().padStart(2, '0')
-            const year = nowDate.getFullYear().toString().slice(-2)
-            const hours = nowDate.getHours().toString().padStart(2, '0')
-            const minutes = nowDate.getMinutes().toString().padStart(2, '0')
-
-
-            const date = `${day}/${month}/${year} at: ${hours}:${minutes}`
-            await Users.findByIdAndUpdate(user._id, { last_connection: date })
+            await Users.findByIdAndUpdate(user._id, { last_connection: argentinaTime.toJSDate() })
             logger.info('sesion iniciada con exito')
             res.json({ status: "success", message: "Sesion iniciada" });
 

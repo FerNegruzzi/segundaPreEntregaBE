@@ -1,5 +1,8 @@
 const { Router } = require('express')
 const CartsDao = require('../dao/Carts.dao')
+const logger = require('../utils/logger.utils')
+const uuid = require('uuid')
+const checkData = require('../dao/Tickes.dao')
 
 const router = Router()
 const Carts = new CartsDao()
@@ -99,6 +102,33 @@ router.put('/:cid/:pid', async (req, res) => {
         res.json({ message: 'cart uploaded' })
     } catch (error) {
         res.status(500).json({ error: error.message })
+    }
+})
+
+// Finalizar compra-------------------------------
+router.get('/:cid/purchase', async (req, res) => {
+    try {
+        const { cid } = req.params
+        const cart = await Carts.findById(cid)
+        // const email = req.user.email
+        const code = uuid.v4()
+
+        console.log(req.session.user.email);
+
+        const purchaseData = await checkData(code, email, cart)
+        const newTicket = purchaseData.ticket
+        const noProcessedProducts = purchaseData.noProcessedProducts
+
+        if (noProcessedProducts.length > 0) {
+            res.status(200).json({
+                'Hay peroductos que no fueron procesados': noProcessedProducts,
+                'Ticket de compra': newTicket
+            })
+        } else {
+            res.status(200).json({ 'Ticket de compra:': newTicket })
+        }
+    } catch (error) {
+        logger.error('error al generar un ticket', error)
     }
 })
 module.exports = router

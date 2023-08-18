@@ -1,0 +1,11 @@
+<ul>
+    {{#each users}}
+    <li>
+        <h2>User: {{this.email}}</h2>
+        <p>Role: {{this.role}}</p>
+
+        <a href="/users/premium/{{this._id}}">Cambiar rol</a>
+        <a href="/users/deleteUser/{{this._id}}">Eliminar usuario</a>
+    </li>
+    {{/each}}
+</ul>

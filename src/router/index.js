@@ -6,6 +6,7 @@ const authController = require('../controllers/controller.auth')
 const viewsTemplateController = require('../controllers/controller.viewsTemplate')
 const currentController = require('../controllers/controller.current')
 const loggerController = require('../controllers/controller.logger')
+const adminView = require('../controllers/controller.adminView')
 // const passport = require('passport')
 const { verifyToken } = require('../utils/jwt.utils')
 
@@ -17,6 +18,7 @@ const router = app => {
     app.use('/auth', authController)
     app.use('/current', verifyToken, currentController)
     app.use('/loggerTest', loggerController)
+    app.use('/adminView', adminView)
     app.use('/', viewsTemplateController)
     
 }

@@ -6,7 +6,6 @@ const UserServ = require('../services/users.service')
 const logger = require('../utils/logger.utils')
 const uploader = require('../utils/multer.utils')
 
-
 const Users = new UserDAO()
 
 const router = Router()
@@ -21,6 +20,21 @@ router.post('/', passport.authenticate('signup', { session: false }),
             res.status(500).json({ status: 'error', error: 'Internal server error' })
         }
     })
+
+router.get('/', async (req, res) => {
+    try {
+        const users = await Users.getAll()
+        const usersInfo = users.map(user => ({
+            name: user.first_name,
+            email: user.email,
+            rol: user.role
+        }));
+        res.status(200).json({ message: 'Usuarios obtenidos exitosamente', users: usersInfo })
+        logger.info('Todos los usuarios se trajeron con exito', usersInfo)
+    } catch (error) {
+        logger.error('Error al traer todos los usuarios', error)
+    }
+})
 
 
 router.get('/premium/:uid', async (req, res) => {
@@ -74,10 +88,44 @@ router.get('/failRegister', (req, res) => {
     res.json({ error: 'Failed signup' })
 })
 
-router.delete('/', async (req, res) => {
-    await Users.deleteAllOnlyForDevs()
+router.delete('/deleteForDevs', async (req, res) => {
+    await Users.deleteAll()
     res.json({ message: 'All users deleted' })
 })
 
+router.delete('/', async (req, res) => {
+    try {
+        const currentDate = new Date()
+        const twoDaysAgo = new Date()
+        twoDaysAgo.setDate(currentDate.getDate() - 2)
 
+        const inactiveUsers = await Users.deleteAll(twoDaysAgo).catch(error => {
+            logger.error('Error al eliminar los usuarios', error)
+            throw error
+        })
+
+        if (inactiveUsers) {
+            const deletedCount = inactiveUsers.deletedCount || 0
+            res.status(200).json({ message: 'Usuarios inactivos eliminados con exito', deletedCount })
+        } else {
+            res.status(200).json({ message: 'Ningún usuario inactivo fue encontrado', deletedCount: 0 })
+        }
+    } catch (error) {
+        logger.error('Error al eliminar usuarios inactivos', error)
+        res.status(500).json({ message: 'Error al eliminar usuarios inactivos' })
+    }
+})
+
+router.get('/deleteUser/:uid', async (req, res, next) => {
+    try {
+      const userId = req.params.uid
+      const user = await Users.getOneById({id: userId})
+      await Users.deleteOne({id: userId})
+  
+      res.status(201).json({message: `Usuario ${user.email} eliminado`})
+    } catch (error) {
+      next(error)
+    }
+  
+  })
 module.exports = router

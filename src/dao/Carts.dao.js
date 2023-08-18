@@ -22,7 +22,7 @@ class CartsDao {
 
     async findById(id) {
         try {
-            return await Carts.findById(id)
+            return await Carts.findById(id).populate('productos.product')
         } catch (error) {
             return error
         }

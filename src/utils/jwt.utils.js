@@ -4,14 +4,19 @@ const { secretKey } = require('../config/app.config');
 const SECRET_KEY = secretKey
 
 const generateToken = user => {
-    const token = jwt.sign({user}, SECRET_KEY, { expiresIn: '1h' })
+    const token = jwt.sign({ user }, SECRET_KEY, { expiresIn: '1h' })
 
     return token
 }
 
-const verifyToken = (token)=>{
-    const verifiedToken = jwt.verify(token, SECRET_KEY) 
-    return verifiedToken
+const verifyToken = (req, res, next) => {
+    const authToken = req.cookies['authToken']
+    const verifiedToken = jwt.verify(authToken, SECRET_KEY)
+    if(!verifiedToken){
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+    req.user = verifiedToken.email
+    next()
 }
 
 module.exports = {

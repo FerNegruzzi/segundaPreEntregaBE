@@ -1,7 +1,7 @@
 const Users = require("./models/Users.model");
 
 class UserDAO {
-    async getOne(user){
+    async getOne(user) {
         try {
             return await Users.findOne(user)
         } catch (error) {
@@ -9,9 +9,17 @@ class UserDAO {
         }
     }
 
-    async getOneById(id){
+    async getOneById(id) {
         try {
             return await Users.findById(id)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getAll() {
+        try {
+            return await Users.find()
         } catch (error) {
             throw error
         }
@@ -25,17 +33,31 @@ class UserDAO {
         }
     }
 
-    async updateOne(user){
+    async updateOne(user) {
         try {
             return await Users.updateOne(user)
         } catch (error) {
             throw error
         }
     }
-    
-    async deleteAllOnlyForDevs() {
-        await Users.deleteMany()
-      }
+
+    async deleteAll(twoDaysAgo) {
+        try {
+            return await Users.deleteMany({
+                last_connection: { $lt: twoDaysAgo }
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deleteOne(id){
+        try {
+            return await Users.deleteOne({id})
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 module.exports = UserDAO
