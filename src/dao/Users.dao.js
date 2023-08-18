@@ -51,9 +51,9 @@ class UserDAO {
         }
     }
 
-    async deleteOne(id){
+    async deleteOne(_id){
         try {
-            return await Users.deleteOne({id})
+            return await Users.deleteOne({_id})
         } catch (error) {
             throw error
         }

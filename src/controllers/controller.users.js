@@ -39,7 +39,8 @@ router.get('/', async (req, res) => {
 
 router.get('/premium/:uid', async (req, res) => {
     try {
-        const user = await Users.getOneById(req.params.uid)
+        const { _id } = req.params
+        const user = await Users.getOneById(_id)
 
         if (user.role === 'admin') {
             throw new Error('Unauthorized')
@@ -116,16 +117,21 @@ router.delete('/', async (req, res) => {
     }
 })
 
-router.get('/deleteUser/:uid', async (req, res, next) => {
+router.delete('/deleteUser/:uid', async (req, res, next) => {
     try {
-      const userId = req.params.uid
-      const user = await Users.getOneById({id: userId})
-      await Users.deleteOne({id: userId})
-  
-      res.status(201).json({message: `Usuario ${user.email} eliminado`})
+        const userId = req.params.uid
+        const user = await Users.getOneById(userId)
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        await Users.deleteOne(userId)
+        await user.save()
+
+        res.status(201).json({ message: `Usuario ${user.email} eliminado` })
     } catch (error) {
-      next(error)
+        next(error)
     }
-  
-  })
+
+})
 module.exports = router

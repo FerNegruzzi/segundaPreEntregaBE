@@ -1,7 +1,5 @@
 const { Router } = require('express')
 const Users = require('../dao/Users.dao')
-// const handlebars = require('handlebars')
-// const template = handlebars.compile('{{users.trim}}')
 
 const User = new Users()
 const router = Router()
@@ -9,17 +7,14 @@ const router = Router()
 router.get('/', async (req, res, next) => {
     try {
         const users = await User.getAll()
-
-        // template(
-        //     { users:  },
-        //     {
-        //         allowProtoMethodsByDefault: {
-        //             trim: true
-        //         }
-        //     }
-        // )
-        res.render('adminView.handlebars', { users })
-
+        const usersProps = users.map(user => {
+            return {
+                email: user.email,
+                role: user.role,
+                _id: user._id
+            }
+        })
+        res.render('adminView.handlebars', { users: usersProps })
     } catch (error) {
         next(error)
     }
