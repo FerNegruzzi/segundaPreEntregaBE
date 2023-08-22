@@ -110,10 +110,10 @@ router.get('/:cid/purchase', async (req, res) => {
     try {
         const { cid } = req.params
         const cart = await Carts.findById(cid)
-        // const email = req.user.email
+        const email = req.user.email
         const code = uuid.v4()
 
-        console.log(req.session.user.email);
+        // console.log(req.session.user.email);
 
         const purchaseData = await checkData(code, email, cart)
         const newTicket = purchaseData.ticket

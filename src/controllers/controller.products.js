@@ -37,6 +37,7 @@ router.get('/', async (req, res) => {
         const sort = req.query.sort || '';
 
         const result = await ProductsDao.findAll(limit, page, category, sort)
+        console.log(result);
 
         const data = {
             status: "success",
@@ -84,6 +85,7 @@ router.post('/', /*uploader.single('image'), */async (req, res) => {
             price
         }
         const newProduct = await ProductsDao.create(newProductInfo)
+        newProduct.save()
         res.json({ message: 'Product created', product: newProduct })
     } catch (error) {
         if (error.code === 11000) {
@@ -110,6 +112,13 @@ router.patch('/:pid', async (req, res) => {
     } catch (error) {
         res.json({ message: error })
     }
+})
+
+router.delete('/deleteOne/:uid', async (req, res) => {
+    const { userId } = req.params.uid
+    await ProductsDao.deleteOne(userId)
+    logger.info('Producto eliminado con exito')
+    res.status(200).json('Product eliminates succesfuly')
 })
 
 router.delete('/deleteAll', async (req, res) => {

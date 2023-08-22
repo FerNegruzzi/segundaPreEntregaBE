@@ -10,39 +10,39 @@ class ProductsDao {
                 limit: limit,
                 sort: sort === 'asc' ? { price: 1 } : sort === 'desc' ? { price: -1 } : null,
                 customLabels: {
-                  totalDocs: 'totalItems',
-                  docs: 'products',
-                  page: 'page',
-                  nextPage: 'nextPage',
-                  prevPage: 'prevPage',
-                  totalPages: 'totalPages',
-                  hasNextPage: 'hasNextPage',
-                  hasPrevPage: 'hasPrevPage',
-                  nextPageLink: 'nextLink',
-                  prevPageLink: 'prevLink'
+                    totalDocs: 'totalItems',
+                    docs: 'products',
+                    page: 'page',
+                    nextPage: 'nextPage',
+                    prevPage: 'prevPage',
+                    totalPages: 'totalPages',
+                    hasNextPage: 'hasNextPage',
+                    hasPrevPage: 'hasPrevPage',
+                    nextPageLink: 'nextLink',
+                    prevPageLink: 'prevLink'
                 }
-              }
+            }
 
-              let queryObject
+            let queryObject
 
-              if(query){
+            if (query) {
                 queryObject = {
                     category: {
                         $regex: query,
                         $options: 'i'
                     }
                 }
-              }else{
+            } else {
                 queryObject = {}
-              }
-              console.log(queryObject);
+            }
+            console.log(queryObject);
             return await Products.paginate(queryObject, options)
         } catch (error) {
             return error
         }
     }
-    
-    async findById(id){
+
+    async findById(id) {
         try {
             return await Products.findById(id)
         } catch (error) {
@@ -67,17 +67,29 @@ class ProductsDao {
     }
 
     async deleteAll() {
-        return await Products.deleteMany()
+        try {
+            return await Products.deleteMany()
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deleteOne(userId) {
+        try {
+            return await Products.deleteOne(userId)
+        } catch (error) {
+            throw error
+        }
     }
 
 
     async updateOne(id, data) {
         try {
-          return await Products.findByIdAndUpdate(id, data, { new: true });
+            return await Products.findByIdAndUpdate(id, data, { new: true });
         } catch (error) {
-          return error;
+            return error;
         }
-      }
+    }
     // async paginate(query, options){
     //     try {
     //         return await Products.paginate({query},{options})

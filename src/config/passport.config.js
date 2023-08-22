@@ -76,30 +76,33 @@ const initPassport = () => {
             }
         }))
 
-    passport.use('github', new GitHubStrategy({
-        clientID: process.env.GITID,
-        clientSecret: process.env.GITSECRET,
-        clientURL: process.env.GITURL
-    }, async (accessToken, refreshToken, profile, done) => {
-        try {
-            const user = await Users.getOne({ email: profile._json.email })
-            if (!user) {
-                const newUserInfo = {
-                    first_name: profile._json.name,
-                    last_name: '',
-                    age: 19,
-                    email: profile._json.email,
-                    password: ''
-                }
-                const newUser = await Users.createNewUser(newUserInfo)
-                return done(null, newUser)
-            }
+// INICIO DE SESION CON GITHUB COMENTADO PORQUE ESTOY EN OTRO PC,
+// Y NO TENGO EL GITID, GITSECRET Y GITURL
+    
+    // passport.use('github', new GitHubStrategy({
+    //     clientID: process.env.GITID,
+    //     clientSecret: process.env.GITSECRET,
+    //     clientURL: process.env.GITURL
+    // }, async (accessToken, refreshToken, profile, done) => {
+    //     try {
+    //         const user = await Users.getOne({ email: profile._json.email })
+    //         if (!user) {
+    //             const newUserInfo = {
+    //                 first_name: profile._json.name,
+    //                 last_name: '',
+    //                 age: 19,
+    //                 email: profile._json.email,
+    //                 password: ''
+    //             }
+    //             const newUser = await Users.createNewUser(newUserInfo)
+    //             return done(null, newUser)
+    //         }
 
-            done(null, user)
-        } catch (error) {
-            done(error)
-        }
-    }))
+    //         done(null, user)
+    //     } catch (error) {
+    //         done(error)
+    //     }
+    // }))
 
     // individualizamos los usuarios 
     passport.serializeUser((user, done) => {

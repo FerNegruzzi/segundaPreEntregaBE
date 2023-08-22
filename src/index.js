@@ -21,20 +21,20 @@ app.use(morgan('dev'))
 // app.use(logger)
 
 app.use(cookieParser())
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://FerNegruzzi:admin@ecommerce.ytegojc.mongodb.net/sessions?retryWrites=true&w=majority',
-        mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-        ttl: 15
-    }),
-    secret: 'coderHouse',
-    resave: false,
-    saveUninitialized: false
-}))
+// app.use(session({
+//     store: MongoStore.create({
+//         mongoUrl: 'mongodb+srv://FerNegruzzi:admin@ecommerce.ytegojc.mongodb.net/sessions?retryWrites=true&w=majority',
+//         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+//         ttl: 15
+//     }),
+//     secret: 'coderHouse',
+//     resave: false,
+//     saveUninitialized: false
+// }))
 
 initPassport()
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname + '/views')

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-const {dbAdmin, dbPassword, dbHost} = require('../src/config/db.config')
+const {dbAdmin, dbPassword, dbHost, dbUrl} = require('../src/config/db.config')
 
 
 const mongoConnect = async () => {
     try {
-        await mongoose.connect(`mongodb+srv://${dbAdmin}:${dbPassword}@${dbHost}?retryWrites=true&w=majority`)
+        await mongoose.connect(`${dbUrl}`)
         console.log('db is connected');
     } catch (error) {
         console.log(error);
