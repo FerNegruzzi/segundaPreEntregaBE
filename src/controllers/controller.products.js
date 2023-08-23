@@ -37,8 +37,6 @@ router.get('/', async (req, res) => {
         const sort = req.query.sort || '';
 
         const result = await ProductsDao.findAll(limit, page, category, sort)
-        console.log(result);
-
         const data = {
             status: "success",
             payload: result.products,
