@@ -43,6 +43,8 @@ const initPassport = () => {
         async (req, username, password, done) => {
             try {
                 const newUserInfo = new UserDTO(req.body)
+                const users = await Users.getAll()
+                console.log(users);
 
                 const checkNewUser = await Users.getOne({ email: username })
                 if (checkNewUser) {

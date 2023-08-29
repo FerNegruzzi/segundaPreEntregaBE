@@ -1,9 +1,8 @@
-# Primera practica
+# Proyecto final Backend
 * Definicion
 * Componentes
-
 ## Definicion
-vamos a construir una aplicacion para una E-commerce, vamos a tener productos, carritos y un chat de mensajes.
+Este proyecto es el backend de un E-Commerce realizado a lo largo del curso de backend de CoderHouse. Tiene un front muy sencillo 
 
 ## Components
 Paquetes a utilizar:
@@ -11,6 +10,18 @@ Paquetes a utilizar:
 * Multer
 * Handlebars
 * Mongoose
+* Dotenv
+* Bcrypt 
+* Nodemailer
+* Twilio
+* Passport
+* Passport con Github
+* Swagger para documentar
+* Uuid
+* Winston
+* Chai
+* Mocha
+* Supertest
 
 ## Modulos
 * Configuracion del servidor
@@ -19,6 +30,8 @@ Paquetes a utilizar:
 * DAO's
 * Controladores
 * Config
+* Logs con Winston
+* Middleware de control de acceso (con errores)
 
 Para ejecutar el proyecto en local:
 
