@@ -4,6 +4,14 @@ const Products = require("./models/Products.model");
 class CartsDao {
     constructor() { }
 
+    async save() {
+        try {
+            return await Carts.save()
+        } catch (error) {
+            throw error
+        }
+    }
+
     async findAll() {
         try {
             return await Carts.find()

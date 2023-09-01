@@ -1,11 +1,13 @@
 const { Router } = require('express')
 const CartsDao = require('../dao/Carts.dao')
+const ProductsDao = require('../dao/Products.dao')
 const logger = require('../utils/logger.utils')
 const uuid = require('uuid')
 const checkData = require('../dao/Tickes.dao')
 
 const router = Router()
 const Carts = new CartsDao()
+const Products = new ProductsDao()
 // obtengo todos los carritos
 router.get('/', async (req, res) => {
     try {
@@ -43,14 +45,39 @@ router.post('/', async (req, res) => {
     }
 })
 // agrego un poducto a un carrito
-router.put('/:cid/:pid', async (req, res) => {
+router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
-        const carts = await Carts.addProduct(cid, pid)
-        res.json({ carts })
+        const cart = await Carts.findById(cid)
+        if (!cart) {
+            res.status(404).json({ error: "Carrito no encontrado" });
+            logger.error('Carrito no encontrado')
+        }
+        const product = await Products.findById(pid)
+        if (!product) {
+            res.status(404).json({ error: "Producto no encontrado" });
+            logger.error('Producto no encontrado')
+        }
+
+        if (!cart.products) {
+            cart.products = [];
+        }
+
+        const itemIndex = cart.products.findIndex(p => p.product._id.toString() === pid)
+        if (itemIndex === -1) {
+            cart.products.push({
+                product: pid,
+                quantity: 1
+            })
+        } else {
+            cart.products[itemIndex].quantity++
+        }
+        await Carts.save()
+        logger.info('Producto agregado con exito')
+        res.status(201).json({ message: "Producto agregado al carrito" });
     } catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: 'bad request' })
+        logger.error('Error al agregar el producto', error)
+        return error;
     }
 })
 // eliminar collection carts
