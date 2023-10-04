@@ -1,0 +1,200 @@
+header .navbar-nav, header .nav-link, header .navbar-brand, footer p {
+    color: white;
+    font-family: monospace; }
+  
+  main h2, main h3 {
+    color: black;
+    font-family: monospace;
+    font-size: large; }
+  
+  main .w-100, main .skate, main .rueda, main .remera, main .zapatillas, main .buzo {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 2rem; }
+  
+  main .d-block {
+    border: solid black 2px;
+    border-radius: 10px;
+    margin: 15px; }
+  
+  header .imgCalavera {
+    height: 70px; }
+  
+  header .container-fluid {
+    margin: 0px 200px; }
+  
+  header .navbar-toggler {
+    color: #fff;
+    font-size: 25px; }
+  
+  header .navbar-toggler-icon {
+    color: #fff !important; }
+  
+  * {
+    margin: 0 auto;
+    box-sizing: border-box; }
+  
+  main {
+    height: 100%;
+    margin: 0px 200px; }
+    main .w-100 {
+      height: 600px;
+      width: 90% !important; }
+    main .carousel-item.active {
+      display: flex;
+      justify-content: center; }
+    main .banner {
+      width: 100%;
+      display: flex;
+      max-width: 1110px; }
+      main .banner .card {
+        width: 100%;
+        margin: 20px;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0px 1px 10px rgba 0, 0, 0, 0.2;
+        transition: all 400ms ease; }
+        main .banner .card:hover {
+          box-shadow: 5px 5px 20px rgba 0, 0, 0, 0.4;
+          transform: translateY(-3%); }
+      main .banner .card img {
+        width: 100%;
+        height: 510px; }
+    main .skate .card {
+      width: 300px; }
+    main .rueda .card {
+      width: 300px; }
+    main .remera {
+      margin-bottom: 50px; }
+      main .remera .card {
+        width: 400px; }
+    main .zapatillas {
+      margin-bottom: 46px; }
+      main .zapatillas .card {
+        width: 500px;
+        margin: 25px 30px 25px 40px; }
+    main .buzo {
+      margin-bottom: 112px; }
+    main .miCuenta {
+      width: 750px;
+      margin-top: 100px;
+      margin-bottom: 370px; }
+  
+  footer p {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 0; }
+  
+  footer a {
+    height: 100px; }
+  
+  footer .footerAccountLogos {
+    font-size: 3rem;
+    display: flex;
+    justify-content: space-between; }
+  
+  @media (max-width: 1440px) {
+    main {
+      margin: 0 auto; }
+    .w-100 {
+      width: 500px; } }
+  
+  @media (max-width: 1100px) {
+    .w-100 {
+      height: 400px !important; }
+    .banner {
+      height: 350px; }
+      .banner .card-img-overlay {
+        height: 450px; }
+    .skate {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 10px; }
+    .rueda {
+      display: flex;
+      flex-wrap: wrap; }
+    .remera {
+      display: flex;
+      flex-wrap: wrap; }
+      .remera .card {
+        width: 300px !important; } }
+  
+  @media (max-width: 768px) {
+    .skate .card {
+      height: 430px;
+      margin-bottom: 100px; }
+      .skate .card .img-fluid {
+        height: 350px;
+        width: 100px; }
+    .rueda .card {
+      height: 300px;
+      margin-bottom: 100px; }
+      .rueda .card .img-fluid {
+        height: 200px;
+        width: 200px; }
+    .remera .card {
+      width: 250px !important;
+      margin-bottom: 50px; }
+      .remera .card .img-fluid {
+        height: 250px;
+        width: 200px; }
+    .buzo .card {
+      display: flex;
+      flex-wrap: wrap;
+      width: 250px !important; } }
+  
+  @media (max-width: 663px) {
+    .header {
+      width: 70vh; }
+    .skate {
+      display: flex;
+      flex-wrap: wrap; }
+      .skate .card {
+        width: 150px !important;
+        height: 450px; }
+    .rueda {
+      display: flex;
+      flex-wrap: wrap; }
+      .rueda .card {
+        width: 200px !important; }
+    .remera {
+      display: flex;
+      flex-wrap: wrap; }
+      .remera .card {
+        width: 200px !important; } }
+  
+  @media (max-width: 580px) {
+    main {
+      width: 70vh; }
+    .header {
+      width: 70vh; }
+    .w-100 {
+      display: none !important; }
+    .carouselExampleControls {
+      display: none !important; }
+    .carousel-control-prev-icon {
+      display: none !important; }
+    .carousel-control-next {
+      display: none !important; }
+    .banner .card {
+      height: 300px; }
+    .zapatillas {
+      display: flex;
+      flex-wrap: wrap; }
+    .footer {
+      width: 70vh; } }
+  
+  @media (max-width: 337px) {
+    main {
+      width: 50vh; }
+    .header {
+      width: 50vh; }
+    .rueda .card {
+      width: 170px !important; }
+    .remera .card {
+      width: 170px !important; }
+    .footer {
+      width: 50vh; } }
+  
